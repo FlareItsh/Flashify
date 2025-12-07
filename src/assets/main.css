@@ -1,0 +1,123 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-TitleFont: 'Fugaz One', sans-serif;
+  --font-primary: 'Poppins', sans-serif;
+
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-foreground-muted: var(--color-foreground-muted);
+  --color-foreground-subtle: var(--color-foreground-subtle);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-tertiary: var(--color-tertiary);
+  --color-accent: var(--color-accent);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
+  --color-sidebar: var(--color-sidebar);
+  --color-sidebar-foreground: var(--color-sidebar-foreground);
+  --color-sidebar-accent: var(--color-sidebar-accent);
+  --color-border: var(--color-border);
+  --color-border-accent: var(--color-border-accent);
+  --color-modal: var(--color-modal);
+  --color-modal-foreground: var(--color-modal-foreground);
+  --color-modal-accent: var(--color-modal-accent);
+}
+
+:root {
+  /* Base colors */
+  --color-background: oklch(0.98 0.005 228);
+  --color-foreground: oklch(0.25 0.02 228);
+  --color-foreground-muted: oklch(0.45 0.015 228); /* Lighter text for secondary content */
+  --color-foreground-subtle: oklch(0.6 0.01 228); /* Even lighter for hints/placeholders */
+
+  /* Brand colors */
+  --color-primary: oklch(0.78 0.08 215); /* Light blue #8ECAE6 */
+  --color-secondary: oklch(0.62 0.14 215); /* Dark blue #219EBC */
+  --color-tertiary: oklch(0.22 0.05 228); /* Navy #023047 */
+  --color-accent: oklch(0.78 0.15 75); /* Yellow #FFB703 */
+
+  /* Status colors */
+  --color-warning: oklch(0.65 0.19 45); /* Orange #FB8500 */
+  --color-danger: oklch(0.63 0.23 29); /* Red */
+
+  /* Sidebar colors */
+  --color-sidebar: oklch(0.96 0.01 228);
+  --color-sidebar-foreground: oklch(0.3 0.025 228);
+  --color-sidebar-accent: oklch(0.78 0.08 215);
+
+  /* Border colors */
+  --color-border: oklch(0.88 0.015 228);
+  --color-border-accent: oklch(0.78 0.08 215);
+
+  /* Modal colors */
+  --color-modal: oklch(0.99 0.003 228);
+  --color-modal-foreground: oklch(0.25 0.02 228);
+  --color-modal-accent: oklch(0.78 0.15 75);
+}
+.dark {
+  /* Base colors */
+  --color-background: oklch(0.15 0.03 228);
+  --color-foreground: oklch(0.95 0.005 228);
+  --color-foreground-muted: oklch(0.7 0.01 228); /* Dimmer text for secondary content */
+  --color-foreground-subtle: oklch(0.5 0.015 228); /* Even dimmer for hints/placeholders */
+
+  /* Brand colors */
+  --color-primary: oklch(0.78 0.08 215); /* Light blue #8ECAE6 */
+  --color-secondary: oklch(0.62 0.14 215); /* Dark blue #219EBC */
+  --color-tertiary: oklch(0.22 0.05 228); /* Navy #023047 */
+  --color-accent: oklch(0.78 0.15 75); /* Yellow #FFB703 */
+
+  /* Status colors */
+  --color-warning: oklch(0.65 0.19 45); /* Orange #FB8500 */
+  --color-danger: oklch(0.63 0.15 29); /* Red */
+
+  /* Sidebar colors */
+  --color-sidebar: oklch(0.18 0.035 228);
+  --color-sidebar-foreground: oklch(0.92 0.008 228);
+  --color-sidebar-accent: oklch(0.78 0.08 215);
+
+  /* Border colors */
+  --color-border: oklch(0.25 0.04 228);
+  --color-border-accent: oklch(0.78 0.08 215);
+
+  /* Modal colors */
+  --color-modal: oklch(0.2 0.03 228);
+  --color-modal-foreground: oklch(0.95 0.005 228);
+  --color-modal-accent: oklch(0.78 0.15 75);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-primary text-base;
+  }
+
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl font-semibold;
+  }
+
+  h5 {
+    @apply text-lg font-medium;
+  }
+
+  h6 {
+    @apply text-base font-medium;
+  }
+
+  p,
+  span {
+    @apply text-base;
+  }
+}
