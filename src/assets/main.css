@@ -55,6 +55,7 @@
   --color-modal-foreground: oklch(0.25 0.02 228);
   --color-modal-accent: oklch(0.78 0.15 75);
 }
+
 .dark {
   /* Base colors */
   --color-background: oklch(0.15 0.03 228);

@@ -10,7 +10,8 @@ export const buttonVariants = cva(
       variant: {
         default: 'bg-primary rounded-lg px-6 py-3 text-white transition hover:opacity-90',
         destructive: 'bg-danger rounded-lg px-6 py-3 text-white transition hover:opacity-90',
-        outline: 'border-border text-foreground hover:bg-border/20 rounded-lg border bg-transparent px-6 py-3 transition',
+        outline:
+          'border-border text-foreground hover:bg-border/20 rounded-lg border bg-transparent px-6 py-3 transition',
         secondary: 'bg-secondary rounded-lg px-6 py-3 text-white transition hover:opacity-90',
         accent: 'bg-accent rounded-lg px-6 py-3 text-white transition hover:opacity-90',
         ghost: 'hover:bg-border/20 text-foreground',
