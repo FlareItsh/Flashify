@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'Navbar'
+}
+</script>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { Button } from './ui/button'
@@ -37,7 +43,9 @@ const toggleMobileMenu = () => {
 <template>
   <nav class="bg-sidebar p-5">
     <div class="flex items-center justify-between">
-      <h1 class="font-TitleFont text-secondary text-2xl md:text-4xl">Flashify</h1>
+      <RouterLink to="/">
+        <h1 class="font-TitleFont text-secondary text-2xl md:text-4xl">Flashify</h1>
+      </RouterLink>
 
       <!-- Desktop Navigation -->
       <div class="hidden items-center gap-4 md:flex">
@@ -187,13 +195,17 @@ const toggleMobileMenu = () => {
           </button>
         </div>
 
-        <Button
-          variant="outline"
-          class="text-md w-full font-semibold"
-        >
-          Login
-        </Button>
-        <Button class="text-md w-full font-semibold">Sign Up</Button>
+        <RouterLink to="/login">
+          <Button
+            variant="outline"
+            class="text-md w-full font-semibold"
+          >
+            Login
+          </Button>
+        </RouterLink>
+        <RouterLink to="/signup">
+          <Button class="text-md w-full font-semibold">Sign Up</Button>
+        </RouterLink>
       </div>
     </Transition>
   </nav>

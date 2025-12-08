@@ -121,4 +121,17 @@
   span {
     @apply text-base;
   }
+
+  /* Custom text selection colors */
+  input::selection,
+  textarea::selection {
+    background-color: oklch(0.78 0.08 215 / 0.3); /* Primary color with opacity */
+    color: var(--color-foreground);
+  }
+
+  input::-moz-selection,
+  textarea::-moz-selection {
+    background-color: oklch(0.78 0.08 215 / 0.3); /* Primary color with opacity */
+    color: var(--color-foreground);
+  }
 }

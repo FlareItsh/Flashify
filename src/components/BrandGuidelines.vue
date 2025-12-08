@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { Button } from './ui/button'
+</script>
 
 <template>
   <div class="min-h-screen p-8">
@@ -111,9 +113,12 @@
             <p class="text-foreground-muted mb-4 text-sm">
               This is a modal dialog with custom styling
             </p>
-            <button class="bg-modal-accent rounded px-4 py-2 text-white hover:opacity-90">
+            <Button
+              variant="accent"
+              size="default"
+            >
               Confirm
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -136,23 +141,33 @@
     <section class="mb-12">
       <h2 class="border-border mb-4 border-b pb-2">Interactive Components</h2>
       <div class="flex flex-wrap gap-3">
-        <button class="bg-primary rounded-lg px-6 py-3 text-white transition hover:opacity-90">
-          Primary Button
-        </button>
-        <button class="bg-secondary rounded-lg px-6 py-3 text-white transition hover:opacity-90">
-          Secondary Button
-        </button>
-        <button class="bg-accent rounded-lg px-6 py-3 text-white transition hover:opacity-90">
-          Accent Button
-        </button>
-        <button class="bg-danger rounded-lg px-6 py-3 text-white transition hover:opacity-90">
-          Danger Button
-        </button>
-        <button
-          class="border-border text-foreground hover:bg-border/20 rounded-lg border bg-transparent px-6 py-3 transition"
+        <Button variant="default">Primary Button</Button>
+        <Button variant="secondary">Secondary Button</Button>
+        <Button variant="accent">Accent Button</Button>
+        <Button variant="destructive">Danger Button</Button>
+        <Button variant="outline">Outline Button</Button>
+        <Button variant="ghost">Ghost Button</Button>
+        <Button variant="link">Link Button</Button>
+      </div>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <Button
+          variant="default"
+          size="sm"
         >
-          Outline Button
-        </button>
+          Small Button
+        </Button>
+        <Button
+          variant="default"
+          size="default"
+        >
+          Default Button
+        </Button>
+        <Button
+          variant="default"
+          size="lg"
+        >
+          Large Button
+        </Button>
       </div>
     </section>
 
