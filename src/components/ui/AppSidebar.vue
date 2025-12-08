@@ -171,7 +171,7 @@ const isProfileActive = () => route.path === '/profile'
 
           <component
             :is="item.icon"
-            class="h-5 w-5 flex-shrink-0"
+            class="h-5 w-5 shrink-0"
           />
           <span
             v-if="!isCollapsed"
@@ -195,82 +195,91 @@ const isProfileActive = () => route.path === '/profile'
       </div>
     </nav>
 
-    <!-- Footer Profile -->
-    <div class="border-border border-t p-4">
+    <!-- Footer Section -->
+    <div class="border-border space-y-2 border-t p-4">
       <!-- Theme Toggle -->
-      <div class="group relative mb-2">
+      <div class="group relative">
         <button
           @click="toggleTheme"
-          class="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative flex w-full items-center gap-3 rounded-lg p-3 transition-colors"
+          class="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative w-full rounded-lg p-3 transition-colors"
           :class="{ 'justify-center': isCollapsed, 'justify-start': !isCollapsed }"
           :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
         >
-          <Transition
-            name="icon"
-            mode="out-in"
-          >
-            <Moon
-              v-if="isDark"
-              key="moon"
-              class="h-5 w-5 flex-shrink-0"
-            />
-            <Sun
-              v-else
-              key="sun"
-              class="h-5 w-5 flex-shrink-0"
-            />
-          </Transition>
-          <span
-            v-if="!isCollapsed"
-            class="font-medium"
-          >
-            {{ isDark ? 'Dark' : 'Light' }} Mode
-          </span>
+          <!-- Use grid to perfectly align icon in the center -->
+          <div class="grid grid-cols-[auto_1fr] items-center gap-3">
+            <!-- Icon column - always centered -->
+            <div class="flex justify-center">
+              <Transition
+                name="icon"
+                mode="out-in"
+              >
+                <Moon
+                  v-if="isDark"
+                  key="moon"
+                  class="h-5 w-5 shrink-0"
+                />
+                <Sun
+                  v-else
+                  key="sun"
+                  class="h-5 w-5 shrink-0"
+                />
+              </Transition>
+            </div>
+
+            <!-- Text - only visible when expanded -->
+            <span
+              v-if="!isCollapsed"
+              class="text-left font-medium"
+            >
+              {{ isDark ? 'Dark' : 'Light' }}mode
+            </span>
+          </div>
         </button>
 
-        <!-- Tooltip for Theme when collapsed -->
+        <!-- Tooltip when collapsed -->
         <div
           v-if="isCollapsed"
-          class="pointer-events-none absolute top-1/2 left-full z-50 ml-2 -translate-y-1/2 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+          class="pointer-events-none absolute top-1/2 left-full z-50 ml-2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
         >
           <div
             class="bg-primary rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg"
           >
-            {{ isDark ? 'Dark' : 'Light' }} Mode
+            {{ isDark ? 'Dark' : 'Light' }}mode
           </div>
         </div>
       </div>
 
+      <!-- Profile Link -->
       <div class="group relative">
         <RouterLink
           to="/profile"
           @click="closeMobileMenu"
-          class="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative flex items-center gap-3 rounded-lg p-3 transition-colors"
-          :class="{
-            'justify-center': isCollapsed,
-            'justify-start': !isCollapsed,
-            'bg-primary/10 text-primary font-semibold': isProfileActive()
-          }"
+          class="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative block w-full rounded-lg p-3 transition-colors"
+          :class="{ 'bg-primary/10 text-primary font-semibold': isProfileActive() }"
         >
-          <!-- Active indicator for Profile -->
+          <div class="grid grid-cols-[auto_1fr] items-center gap-3">
+            <div class="flex justify-center">
+              <User class="h-5 w-5 shrink-0" />
+            </div>
+            <span
+              v-if="!isCollapsed"
+              class="text-left font-medium"
+            >
+              Profile
+            </span>
+          </div>
+
+          <!-- Active indicator bar -->
           <div
             v-if="isProfileActive()"
             class="bg-primary absolute inset-y-0 left-0 w-1 rounded-r-full"
           ></div>
-
-          <User class="h-5 w-5 flex-shrink-0" />
-          <span
-            v-if="!isCollapsed"
-            class="font-medium"
-          >
-            Profile
-          </span>
         </RouterLink>
 
-        <!-- Tooltip for Profile when collapsed -->
+        <!-- Tooltip when collapsed -->
         <div
           v-if="isCollapsed"
-          class="pointer-events-none absolute top-1/2 left-full z-50 ml-2 -translate-y-1/2 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+          class="pointer-events-none absolute top-1/2 left-full z-50 ml-2 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
         >
           <div
             class="bg-primary rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg"
