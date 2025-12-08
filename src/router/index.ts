@@ -4,6 +4,7 @@ import BrandGuidelines from '../components/BrandGuidelines.vue'
 import Login from '@/pages/auth/Login.vue'
 import Signup from '@/pages/auth/Signup.vue'
 import HomeView from '@/views/HomeView.vue'
+import Dashboard from '@/Dashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,7 +27,7 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: Signup
+      component: Dashboard
     },
     {
       path: '/brand-guidelines',

@@ -6,7 +6,7 @@ export default {
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Button } from './ui/button'
+import Button from './ui/Button.vue'
 import { RouterLink } from 'vue-router'
 
 const isDark = ref(false)
