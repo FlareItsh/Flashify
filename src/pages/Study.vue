@@ -5,8 +5,8 @@ import Heading from '@/components/ui/Heading.vue'
 <template>
   <div class="p-6">
     <Heading
-      title="Settings"
-      subtitle="Adjust your application preferences here."
+      title="Study Mode"
+      subtitle="Start studying your flashcards here."
     />
   </div>
 </template>

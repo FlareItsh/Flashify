@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { LayoutDashboard, CreditCard, Library, Settings, User, Sun, Moon, X } from 'lucide-vue-next'
+import {
+  LayoutDashboard,
+  BookOpenCheck,
+  Library,
+  Settings,
+  User,
+  Sun,
+  Moon,
+  X
+} from 'lucide-vue-next'
 
 const isCollapsed = ref(false)
 const isMobileMenuOpen = ref(false)
@@ -21,8 +30,8 @@ onMounted(() => {
 
 const menuItems = [
   { title: 'Dashboard', icon: LayoutDashboard, url: '/dashboard' },
-  { title: 'Flashcards', icon: CreditCard, url: '/flashcards' },
   { title: 'Collections', icon: Library, url: '/collections' },
+  { title: 'Study', icon: BookOpenCheck, url: '/study' },
   { title: 'Settings', icon: Settings, url: '/settings' }
 ]
 

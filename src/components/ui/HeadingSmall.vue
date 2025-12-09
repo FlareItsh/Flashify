@@ -15,7 +15,7 @@ defineProps({
 
 <template>
   <div class="mb-4 space-y-1">
-    <h3 class="text-3xl font-bold">{{ title }}</h3>
-    <p class="text-foreground-muted text-sm">{{ subtitle }}</p>
+    <h3 class="text-lg font-semibold">{{ title }}</h3>
+    <p class="text-foreground-muted text-xs">{{ subtitle }}</p>
   </div>
 </template>

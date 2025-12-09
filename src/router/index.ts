@@ -34,14 +34,14 @@ const router = createRouter({
           component: () => import('@/Dashboard.vue')
         },
         {
-          path: '/flashcards',
-          name: 'flashcards',
-          component: () => import('@/pages/Flashcards.vue')
-        },
-        {
           path: '/collections',
           name: 'collections',
           component: () => import('@/pages/Collections.vue')
+        },
+        {
+          path: '/study',
+          name: 'study',
+          component: () => import('@/pages/Study.vue')
         },
         {
           path: '/settings',
