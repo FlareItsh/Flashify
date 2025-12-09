@@ -3,14 +3,20 @@ import Deck from '@/components/ui/Deck.vue'
 import Heading from '@/components/ui/Heading.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import DashboardCardLayout from '@/layouts/DashboardCardLayout.vue'
+import Button from '@/components/ui/Button.vue'
 </script>
 
 <template>
   <AppLayout>
-    <Heading
-      title="Collections"
-      subtitle="Manage your flashcard collections here."
-    />
+    <div class="flex flex-wrap items-center justify-between">
+      <Heading
+        title="Collections"
+        subtitle="Manage your flashcard collections here."
+      />
+      <div class="mb-4">
+        <Button variant="secondary">Create New Collection</Button>
+      </div>
+    </div>
     <DashboardCardLayout>
       <Deck
         title="What is Vue 3?"

@@ -16,12 +16,12 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const variantClasses = {
-  default: 'bg-primary rounded-lg  text-white transition hover:opacity-90',
-  secondary: 'bg-secondary rounded-lg  text-white transition hover:opacity-90',
-  accent: 'bg-accent rounded-lg  text-white transition hover:opacity-90',
-  destructive: 'bg-danger rounded-lg  text-white transition hover:opacity-90',
+  default: 'bg-primary rounded-lg px-6 py-3 text-white transition hover:opacity-90',
+  secondary: 'bg-secondary rounded-lg px-6 py-3 text-white transition hover:opacity-90',
+  accent: 'bg-accent rounded-lg px-6 py-3 text-white transition hover:opacity-90',
+  destructive: 'bg-danger rounded-lg px-6 py-3 text-white transition hover:opacity-90',
   outline:
-    'border-border text-foreground hover:bg-border/20 rounded-lg border bg-transparent  transition',
+    'border-border text-foreground hover:bg-border/20 rounded-lg border bg-transparent px-6 py-3 transition',
   ghost: 'hover:bg-border/20 text-foreground',
   link: 'text-primary underline-offset-4 hover:underline'
 }
@@ -34,7 +34,7 @@ const sizeClasses = {
 
 const buttonClass = computed(() => {
   const base =
-    'inline-flex items-center justify-center whitespace-nowrap rounded-md px-6 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50'
+    'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50'
   return `${base} ${variantClasses[props.variant]} ${sizeClasses[props.size]}`
 })
 </script>
