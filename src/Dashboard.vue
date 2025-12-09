@@ -23,8 +23,8 @@ import AppLayout from '@/layouts/AppLayout.vue'
     </DashboardCardLayout>
 
     <HeadingSmall
-      title="Recent Activity"
-      subtitle="Your latest actions"
+      title="Recent Collections"
+      subtitle="Your recently created flashcard collections"
       class="mt-4"
     />
 
@@ -51,7 +51,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
     </DashboardCardLayout>
     <div class="mt-4 flex justify-center">
       <RouterLink to="/collections">
-        <Button variant="secondary">View All Activities</Button>
+        <Button variant="secondary">View All Collections</Button>
       </RouterLink>
     </div>
   </AppLayout>
