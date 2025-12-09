@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import DeckContent from './DeckContent.vue'
 
-defineProps<{
-  title?: string
-  description?: string
-  tags?: string[]
-  priority?: 'low' | 'medium' | 'high'
-}>()
+withDefaults(
+  defineProps<{
+    title?: string
+    description?: string
+    tags?: string[]
+    priority?: 'low' | 'medium' | 'high'
+    editable?: boolean
+  }>(),
+  {
+    editable: true
+  }
+)
 </script>
 
 <template>
@@ -18,6 +24,7 @@ defineProps<{
       :description="description"
       :tags="tags"
       :priority="priority"
+      :editable="editable"
     />
   </div>
 </template>

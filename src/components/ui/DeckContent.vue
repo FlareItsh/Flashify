@@ -7,20 +7,25 @@ withDefaults(
     description?: string
     tags?: string[]
     priority?: 'low' | 'medium' | 'high'
+    editable?: boolean
   }>(),
   {
     title: 'Deck Title',
     description: 'Deck description or content',
     tags: () => [],
     difficulty: 'medium',
-    priority: 'medium'
+    priority: 'low',
+    editable: true
   }
 )
 </script>
 
 <template>
   <div class="flex h-full flex-col">
-    <div class="flex items-center justify-between">
+    <div
+      class="flex items-center justify-between"
+      :class="{ 'mb-2': !editable }"
+    >
       <!-- Priority Badge -->
       <span
         v-if="priority"
@@ -35,7 +40,10 @@ withDefaults(
         {{ priority }}
       </span>
       <div class="flex-1"></div>
-      <div class="bg-secondary rounded-full p-2">
+      <div
+        v-if="editable"
+        class="bg-secondary rounded-full p-2"
+      >
         <SquarePen class="h-5 w-5 text-white" />
       </div>
     </div>
