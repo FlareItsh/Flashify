@@ -32,12 +32,21 @@ const router = createRouter({
           path: '', // /dashboard
           name: 'dashboard',
           component: () => import('@/Dashboard.vue')
+
         },
         {
           path: '/collections',
           name: 'collections',
-          component: () => import('@/pages/Collections.vue')
+          component: () => import('@/pages/Collections.vue'),
         },
+
+        {
+          path: '/flashcard/:id',
+          name: 'flashcard',
+          component: () => import('@/pages/FlashCards.vue'),
+          props: true, 
+        },
+        
         {
           path: '/study',
           name: 'study',
