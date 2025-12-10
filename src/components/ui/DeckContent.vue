@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  
 import { SquarePen } from 'lucide-vue-next'
 
 withDefaults(
@@ -40,11 +39,7 @@ withDefaults(
       >
         {{ priority }}
       </span>
-      <div class="flex-1"></div>
-      <div
-        v-if="editable"
-        class="bg-secondary rounded-full p-2"
-      >
+      <div class="bg-secondary rounded-full p-2"> 
         <SquarePen class="h-5 w-5 text-white" />
       </div>
     </div>

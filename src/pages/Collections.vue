@@ -26,15 +26,15 @@ const { decks } = useDecks()
     </div>
     <DashboardCardLayout>
       <Deck
-    v-for="(deck, index) in decks"
-    :key="index"
-    :id="index"
-    :title="deck.title"
-    :description="deck.description"
-    :tags="deck.tags"
-    :difficulty="deck.difficulty"
-    :priority="deck.priority"
-  />
+        v-for="(deck, index) in decks"
+        :key="index"
+        :id="index"
+        :title="deck.title"
+        :description="deck.description"
+        :tags="deck.tags"
+        :difficulty="deck.difficulty"
+        :priority="deck.priority"
+      />
     </DashboardCardLayout>
     <CreateNewCollectionModal
       :show="createNewCollModal.show.value"
