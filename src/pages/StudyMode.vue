@@ -94,13 +94,13 @@ onMounted(() => {
           :style="{
             transform: `
               translateX(${(index - currentIndex) * 95}px)
-              translateY(${Math.abs(index - currentIndex) * 18}px)
+              translateY(${Math.abs(index - currentIndex) * 25}px)
               translateZ(${-Math.abs(index - currentIndex) * 110}px)
-              scale(${index === currentIndex ? 1 : 0.9})
+              scale(${index === currentIndex ? 1 : 1})
             `,
             zIndex: selectedDeck.cards.length - Math.abs(index - currentIndex),
             opacity: Math.abs(index - currentIndex) > 3 ? 0 : 1,
-            pointerEvents: index === currentIndex ? 'auto' : 'none'  // <-- only active card clickable
+            pointerEvents: index === currentIndex ? 'auto' : 'none'
           }"
           @click="goTo(index)"
         >
