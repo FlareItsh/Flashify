@@ -19,7 +19,7 @@ withDefaults(
 </script>
 
 <template>
-  <div class="bg-card border-border rounded-lg border p-6">
+  <div class="bg-card border-border bg-primary/10 rounded-lg border p-6 shadow-md">
     <div class="mb-4 flex items-center justify-between">
       <h2 class="text-xl font-semibold">{{ title }}</h2>
       <component

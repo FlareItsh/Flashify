@@ -1,12 +1,103 @@
 <script setup lang="ts">
 import Button from '@/components/ui/Button.vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { Eye, EyeOff } from 'lucide-vue-next'
+import api from '@/services/api'
+import { API_ENDPOINTS } from '@/config/api'
+
+const router = useRouter()
 
 const showPassword = ref(false)
+const login = ref('')
+const password = ref('')
+const isLoading = ref(false)
+
+const errors = ref({
+  login: '',
+  password: '',
+  api: [] as string[] // Now an array
+})
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value
+}
+
+// Validation logic
+const validateLogin = () => {
+  if (!login.value.trim()) {
+    errors.value.login = 'Email or username is required.'
+  } else {
+    // If it looks like an email, validate format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (login.value.includes('@') && !emailRegex.test(login.value)) {
+      errors.value.login = 'Invalid email format.'
+    } else {
+      errors.value.login = ''
+    }
+  }
+}
+
+const validatePassword = () => {
+  if (!password.value.trim()) {
+    errors.value.password = 'Password is required.'
+  } else if (password.value.length < 8) {
+    errors.value.password = 'Password must be at least 8 characters.'
+  } else {
+    errors.value.password = ''
+  }
+}
+
+const isFormValid = () => {
+  return (
+    errors.value.login === '' &&
+    errors.value.password === '' &&
+    login.value.trim() !== '' &&
+    password.value.trim() !== '' &&
+    errors.value.api.length === 0
+  )
+}
+
+// Login handler
+const attemptLogin = async () => {
+  if (!isFormValid()) return
+
+  isLoading.value = true
+  errors.value.api = [] // Clear previous API errors
+
+  try {
+    const response = await api.post<any>(API_ENDPOINTS.auth.login, {
+      login: login.value,
+      password: password.value
+    })
+
+    const token = response.token || response.data?.token
+
+    if (!token) {
+      throw new Error('No authentication token received')
+    }
+
+    api.setAuthToken(token)
+    await router.push('/dashboard')
+  } catch (error: any) {
+    console.error('Login error:', error)
+    console.error('Full error object:', error.response?.data)
+
+    // Handle backend validation errors (e.g., Laravel-style { errors: { ... } })
+    if (error.response?.data?.errors) {
+      const validationErrors = error.response.data.errors
+      errors.value.api = Object.values(validationErrors).flat() as string[]
+    } else {
+      // Fallback to generic message or Axios error message
+      errors.value.api = [
+        error.response?.data?.message ||
+          error.message ||
+          'Login failed. Please check your credentials.'
+      ]
+    }
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
@@ -15,7 +106,7 @@ const togglePassword = () => {
     <div
       class="grid h-auto w-full max-w-7xl grid-cols-1 overflow-hidden rounded-lg shadow-2xl md:h-[500px] md:grid-cols-2 lg:h-[600px]"
     >
-      <!--Left Side-->
+      <!-- Left Side -->
       <div class="bg-secondary flex flex-col justify-between gap-5 p-5 text-white">
         <RouterLink to="/">
           <h1 class="font-TitleFont">Flashify</h1>
@@ -23,31 +114,55 @@ const togglePassword = () => {
         <p>Study smarter with fast, clean, and customizable flashcards.</p>
       </div>
 
-      <!--Right Side-->
-      <form
-        action=""
-        class="border-border flex flex-col justify-center border p-5 md:p-10"
-      >
+      <!-- Right Side -->
+      <form class="border-border bg-primary/5 flex flex-col justify-center border p-5 md:p-10">
         <div class="text-center">
           <h2>Login</h2>
           <p class="text-foreground-muted mx-auto max-w-sm">
             Welcome Back! Let's get you logged in and get back on track.
           </p>
         </div>
+
         <div class="mt-5 flex flex-col items-center gap-4">
+          <!-- API Error Messages (list, no background/border) -->
+          <div
+            v-if="errors.api.length"
+            class="w-full max-w-sm"
+          >
+            <ul class="list-inside space-y-1 text-sm text-red-600">
+              <li
+                v-for="(error, index) in errors.api"
+                :key="index"
+              >
+                {{ error }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- Email or Username -->
           <div class="flex w-full max-w-sm flex-col gap-1">
             <label
-              for="email"
+              for="login"
               class="text-sm"
             >
-              Email
+              Email or Username
             </label>
             <input
-              type="email"
-              id="email"
+              type="text"
+              id="login"
+              v-model="login"
+              @input="validateLogin"
               class="border-border focus:border-primary hover:border-primary w-full rounded border bg-transparent p-2 transition-colors outline-none focus:ring-0"
             />
+            <p
+              v-if="errors.login"
+              class="text-xs text-red-500"
+            >
+              {{ errors.login }}
+            </p>
           </div>
+
+          <!-- Password -->
           <div class="flex w-full max-w-sm flex-col gap-1">
             <label
               for="password"
@@ -59,6 +174,8 @@ const togglePassword = () => {
               <input
                 :type="showPassword ? 'text' : 'password'"
                 id="password"
+                v-model="password"
+                @input="validatePassword"
                 class="border-border focus:border-primary hover:border-primary w-full rounded border bg-transparent p-2 pr-10 transition-colors outline-none focus:ring-0"
               />
               <button
@@ -67,55 +184,36 @@ const togglePassword = () => {
                 class="text-foreground-muted hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 transition-colors"
                 :aria-label="showPassword ? 'Hide password' : 'Show password'"
               >
-                <svg
+                <EyeOff
                   v-if="showPassword"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                  stroke="currentColor"
                   class="h-5 w-5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
-                  />
-                </svg>
-                <svg
+                />
+                <Eye
                   v-else
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                  stroke="currentColor"
                   class="h-5 w-5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+                />
               </button>
             </div>
+            <p
+              v-if="errors.password"
+              class="text-xs text-red-500"
+            >
+              {{ errors.password }}
+            </p>
           </div>
-          <RouterLink
-            to="/dashboard"
-            class="mt-4 w-full max-w-sm"
-          >
+
+          <!-- Login Button -->
+          <div class="mt-4 w-full max-w-sm">
             <Button
               variant="secondary"
-              class="w-full max-w-sm"
+              class="w-full"
+              :disabled="!isFormValid() || isLoading"
+              @click="attemptLogin"
             >
-              Login
+              {{ isLoading ? 'Logging in...' : 'Login' }}
             </Button>
-          </RouterLink>
+          </div>
+
           <p class="text-foreground-muted mt-4 text-center text-sm">
             Don't have an account?
             <RouterLink

@@ -11,13 +11,16 @@ import {
   Moon,
   X
 } from 'lucide-vue-next'
+import api from '@/services/api'
+import { API_ENDPOINTS } from '@/config/api'
 
 const isCollapsed = ref(false)
 const isMobileMenuOpen = ref(false)
 const isDark = ref(false)
 const route = useRoute()
+const username = ref('Profile')
 
-onMounted(() => {
+onMounted(async () => {
   // Check system preference or localStorage
   const savedTheme = localStorage.getItem('theme')
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -25,6 +28,20 @@ onMounted(() => {
   if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
     isDark.value = true
     document.documentElement.classList.add('dark')
+  }
+
+  // Fetch current user info
+  const token = api.getAuthToken()
+  if (token) {
+    try {
+      const response = await api.get<any>(API_ENDPOINTS.auth.me)
+      // Handle both response formats: { data: {...} } or direct user object
+      const user = response.data?.data || response.data || response
+      username.value = user.username || 'Profile'
+    } catch (error) {
+      console.error('Failed to fetch user info:', error)
+      // If fetch fails, keep default 'Profile'
+    }
   }
 })
 
@@ -274,7 +291,7 @@ const isProfileActive = () => route.path === '/profile'
               v-if="!isCollapsed"
               class="text-left font-medium"
             >
-              Profile
+              {{ username }}
             </span>
           </div>
 
@@ -293,7 +310,7 @@ const isProfileActive = () => route.path === '/profile'
           <div
             class="bg-primary rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg"
           >
-            Profile
+            {{ username }}
           </div>
         </div>
       </div>
