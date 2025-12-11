@@ -34,7 +34,7 @@ const decks = ref<Deck[]>([
     difficulty: "hard",
     priority: "low",
   },
-  
+
 ])
 
 export function useDecks() {

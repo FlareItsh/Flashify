@@ -1,8 +1,18 @@
+
 <script setup lang="ts">
 import Deck from '@/components/ui/Deck.vue'
 import Heading from '@/components/ui/Heading.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import DashboardCardLayout from '@/layouts/DashboardCardLayout.vue'
+import { useDecks } from '@/composables/useDecks'
+import { useRouter } from 'vue-router'
+
+const { decks } = useDecks()
+const router = useRouter()
+
+function goToStudy(id: number) {
+  router.push({ name: 'study-mode', params: { deckId: id } })
+}
 </script>
 
 <template>
@@ -12,29 +22,23 @@ import DashboardCardLayout from '@/layouts/DashboardCardLayout.vue'
       subtitle="Start studying your flashcards here."
     />
     <DashboardCardLayout>
-      <Deck
-        title="What is Vue 3?"
-        description="A progressive JavaScript framework for building user interfaces"
-        :tags="['Vue', 'JavaScript', 'Frontend']"
-        difficulty="medium"
-        priority="high"
-        :editable="false"
-      />
-      <Deck
-        title="TypeScript Basics"
-        description="Understanding types and interfaces in TypeScript"
-        :tags="['TypeScript', 'Programming']"
-        difficulty="easy"
-        priority="medium"
-        :editable="false"
-      />
-      <Deck
-        title="Advanced CSS Techniques"
-        description="Explore modern CSS features and methodologies"
-        :tags="['CSS', 'Web Design']"
-        difficulty="hard"
-        :editable="false"
-      />
+      <div
+        v-for="deck in decks"
+        :key="deck.id"
+        @click="goToStudy(deck.id)"
+        class="cursor-pointer"
+      >
+        <Deck
+          :title="deck.title"
+          :description="deck.description"
+          :tags="deck.tags"
+          :difficulty="deck.difficulty"
+          :priority="deck.priority"
+          :editable="false"
+        />
+      </div>
     </DashboardCardLayout>
+
+
   </AppLayout>
 </template>

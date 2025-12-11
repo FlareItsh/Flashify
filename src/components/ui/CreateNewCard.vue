@@ -35,7 +35,7 @@ const saveCard = () => {
     <p class="text-foreground-muted mt-4">Enter Answer</p>
     <input v-model="answer" class="border p-2 w-full" />
 
-    <div class="h-px bg-foreground my-8"></div>
+    <div class="h-px mx-5 bg-foreground my-10"></div>
 
     <p class="text-foreground-muted">Enter Hint (Optional)</p>
     <input v-model="hint" class="border p-2 w-full" />

@@ -22,7 +22,7 @@ const { decks } = useDecks()
       />
       <div class="mb-4">
         <Button variant="secondary" @click="createNewCollModal.open">Create New Collection</Button>
-      </div>  
+      </div>
     </div>
     <DashboardCardLayout>
       <Deck
@@ -34,6 +34,7 @@ const { decks } = useDecks()
         :tags="deck.tags"
         :difficulty="deck.difficulty"
         :priority="deck.priority"
+        :editable="true"
       />
     </DashboardCardLayout>
     <CreateNewCollectionModal
