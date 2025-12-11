@@ -1,46 +1,107 @@
 <script setup lang="ts">
-import Button from '@/components/ui/Button.vue'
-import { defineProps, defineEmits, ref } from 'vue'
+import BaseModal from '@/components/ui/BaseModal.vue'
+import { ref, defineProps, defineEmits } from 'vue'
 
 const props = defineProps<{ show: boolean }>()
 const emit = defineEmits<{ (e: 'close'): void }>()
 
-const collectionName = ref('')
-
-const closeModal = () => emit('close')
+const enterName = ref('')
+const enterDifficulty = ref('')
+const enterPriority = ref('')
+const enterDescription = ref('')
 
 const saveCollection = () => {
-    if (!collectionName.value) return
-    console.log('Saving collection:', collectionName.value)
-    closeModal()
+  if (!enterName.value || !enterDifficulty.value) return
+
+  console.log('Saving collection:', {
+    name: enterName.value,
+    difficulty: enterDifficulty.value,
+    priority: enterPriority.value,
+    enterDescription: enterDescription.value,
+  })
+
+  emit('close')
 }
 </script>
 
 <template>
-    <div v-if="props.show" class="fixed inset-0 bg-black/70 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-lg p-13 w-11/12 max-w-md relative">
-            <button variant="" @click="closeModal" class="absolute top-3 right-4 text-gray-500 hover:text-gray-700">
-                ✕
-            </button>
+  <BaseModal
+    :show="props.show"
+    title="Add Collection"
+    @close="emit('close')"
+    @save="saveCollection"
+  >
+    <p class="text-foreground-muted">Enter Collection Name</p>
+    <input v-model="enterName" class="border p-2 w-full resize-none" />
 
-            <h2 class="text-lg font-bold mb-4">Add Collection</h2>
+    <p class="text-foreground-muted mt-5">Enter Difficulty</p>
+    <div class="flex justify-between">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          value="low"
+          v-model="enterDifficulty"
+          class="accent-blue-500"
+        />
+        <span>Easy</span>
+      </label>
 
-            <p class="text-foreground-muted">Enter Question</p>
-            <textarea type="text" v-model="collectionName" class="border resize-none border p-2 w-full" />
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          value="medium"
+          v-model="enterDifficulty"
+          class="accent-yellow-500"
+        />
+        <span>Medium</span>
+      </label>
 
-            <p class="text-foreground-muted">Enter Answer</p>
-            <input type="text" v-model="collectionName" class="border resize-none border p-2 w-full " />
-
-            <div class="h-px bg-black my-12 mx-5"></div>
-
-            <p class="text-foreground-muted -mt-4">Enter Hint (Optional)</p>
-            <input type="text" v-model="collectionName" class="border resize-none border p-2 w-full  mb-5" />
-            <div class="flex justify-center">
-                <Button variant="secondary" @click="saveCollection" class="flex justify-center">
-                    Save
-                </Button>
-            </div>
-
-        </div>
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          value="high"
+          v-model="enterDifficulty"
+          class="accent-red-500"
+        />
+        <span>Hard</span>
+      </label>
     </div>
+
+
+    <p class="text-foreground-muted mt-5">Enter Priority</p>
+    <div class="flex justify-between">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          value="low"
+          v-model="enterPriority"
+          class="accent-blue-500"
+        />
+        <span>Low</span>
+      </label>
+
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          value="medium"
+          v-model="enterPriority"
+          class="accent-yellow-500"
+        />
+        <span>Medium</span>
+      </label>
+
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input
+          type="radio"
+          value="high"
+          v-model="enterPriority"
+          class="accent-red-500"
+        />
+        <span>High</span>
+      </label>
+    </div>
+
+    <p class="text-foreground-muted mt-5">Enter Description</p>
+    <textarea v-model="enterDescription" class="border p-2 w-full resize-none" />
+  </BaseModal>
 </template>

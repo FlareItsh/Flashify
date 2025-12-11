@@ -11,7 +11,7 @@ defineProps<{
 
 <template>
   <div class="rounded-lg border p-6 shadow-sm transition-shadow hover:shadow-md">
-    
+
     <FlashcardContent
       :title="title"
       :description="description"
