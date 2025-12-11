@@ -88,27 +88,29 @@ onMounted(() => {
       <div v-if="selectedDeck.cards.length > 0" class="flex flex-col items-center">
         <div class="coverflow-container">
           <div
-            v-for="(card, index) in selectedDeck.cards"
-            :key="index"
-            class="coverflow-item"
-            :style="{
-              transform: `
-                translateX(${(index - currentIndex) * 95}px)
-                translateY(${Math.abs(index - currentIndex) * 18}px)
-                translateZ(${-Math.abs(index - currentIndex) * 110}px)
-                scale(${index === currentIndex ? 1 : 0.9})
-              `,
-              zIndex: selectedDeck.cards.length - Math.abs(index - currentIndex),
-              opacity: Math.abs(index - currentIndex) > 3 ? 0 : 1
-            }"
-            @click="goTo(index)"
-          >
-            <Flashcard
-              :question="card.question"
-              :answer="card.answer"
-              :hint="card.hint"
-            />
-          </div>
+          v-for="(card, index) in selectedDeck.cards"
+          :key="index"
+          class="coverflow-item"
+          :style="{
+            transform: `
+              translateX(${(index - currentIndex) * 95}px)
+              translateY(${Math.abs(index - currentIndex) * 18}px)
+              translateZ(${-Math.abs(index - currentIndex) * 110}px)
+              scale(${index === currentIndex ? 1 : 0.9})
+            `,
+            zIndex: selectedDeck.cards.length - Math.abs(index - currentIndex),
+            opacity: Math.abs(index - currentIndex) > 3 ? 0 : 1,
+            pointerEvents: index === currentIndex ? 'auto' : 'none'  // <-- only active card clickable
+          }"
+          @click="goTo(index)"
+        >
+          <Flashcard
+            :question="card.question"
+            :answer="card.answer"
+            :hint="card.hint"
+          />
+        </div>
+
         </div>
 
         <div class="mt-12 flex items-center gap-12">
