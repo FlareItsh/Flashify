@@ -54,6 +54,7 @@
   --color-modal: oklch(0.99 0.003 228);
   --color-modal-foreground: oklch(0.25 0.02 228);
   --color-modal-accent: oklch(0.78 0.15 75);
+
 }
 
 .dark {
@@ -122,6 +123,15 @@
     @apply text-base;
   }
 
+  input {
+    @apply rounded-xl h-11;
+  }
+
+  textarea {
+    @apply rounded-xl h-20;
+  }
+
+
   /* Custom text selection colors */
   input::selection,
   textarea::selection {
@@ -134,4 +144,5 @@
     background-color: oklch(0.78 0.08 215 / 0.3); /* Primary color with opacity */
     color: var(--color-foreground);
   }
+
 }

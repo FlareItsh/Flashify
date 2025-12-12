@@ -4,6 +4,13 @@ import Heading from '@/components/ui/Heading.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import DashboardCardLayout from '@/layouts/DashboardCardLayout.vue'
 import Button from '@/components/ui/Button.vue'
+import { useModal } from '@/composables/useModal'
+import CreateNewCollectionModal from '@/components/ui/CreateNewCollectionModal.vue'
+import { useDecks } from '@/composables/useDecks'
+const createNewCollModal = useModal()
+const { decks } = useDecks()
+
+
 </script>
 
 <template>
@@ -14,48 +21,25 @@ import Button from '@/components/ui/Button.vue'
         subtitle="Manage your flashcard collections here."
       />
       <div class="mb-4">
-        <Button variant="secondary">Create New Collection</Button>
+        <Button variant="secondary" @click="createNewCollModal.open">Create New Collection</Button>
       </div>
     </div>
     <DashboardCardLayout>
       <Deck
-        title="What is Vue 3?"
-        description="A progressive JavaScript framework for building user interfaces"
-        :tags="['Vue', 'JavaScript', 'Frontend']"
-        difficulty="medium"
-        priority="high"
-      />
-      <Deck
-        title="TypeScript Basics"
-        description="Understanding types and interfaces in TypeScript"
-        :tags="['TypeScript', 'Programming']"
-        difficulty="easy"
-        priority="medium"
-      />
-      <Deck
-        title="Advanced CSS Techniques"
-        description="Explore modern CSS features and methodologies"
-        :tags="['CSS', 'Web Design']"
-        difficulty="hard"
-      />
-      <Deck
-        title="Advanced CSS Techniques"
-        description="Explore modern CSS features and methodologies"
-        :tags="['CSS', 'Web Design']"
-        difficulty="hard"
-      />
-      <Deck
-        title="Advanced CSS Techniques"
-        description="Explore modern CSS features and methodologies"
-        :tags="['CSS', 'Web Design']"
-        difficulty="hard"
-      />
-      <Deck
-        title="Advanced CSS Techniques"
-        description="Explore modern CSS features and methodologies"
-        :tags="['CSS', 'Web Design']"
-        difficulty="hard"
+        v-for="(deck, index) in decks"
+        :key="index"
+        :id="index"
+        :title="deck.title"
+        :description="deck.description"
+        :tags="deck.tags"
+        :difficulty="deck.difficulty"
+        :priority="deck.priority"
+        :editable="true"
       />
     </DashboardCardLayout>
+    <CreateNewCollectionModal
+      :show="createNewCollModal.show.value"
+      @close="createNewCollModal.close"
+    />
   </AppLayout>
 </template>

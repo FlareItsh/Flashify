@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SquarePen } from 'lucide-vue-next'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     title?: string
     description?: string
@@ -13,7 +13,6 @@ withDefaults(
     title: 'Deck Title',
     description: 'Deck description or content',
     tags: () => [],
-    difficulty: 'medium',
     priority: 'low',
     editable: true
   }
@@ -39,19 +38,19 @@ withDefaults(
       >
         {{ priority }}
       </span>
-      <div class="flex-1"></div>
-      <div
-        v-if="editable"
-        class="bg-secondary rounded-full p-2"
-      >
+
+      <div v-if="editable" class="bg-secondary rounded-full p-2 cursor-pointer">
         <SquarePen class="h-5 w-5 text-white" />
       </div>
     </div>
+
     <div class="flex flex-1 flex-col justify-center">
       <h3 class="mb-2 text-center text-xl font-semibold">{{ title }}</h3>
       <p class="text-muted-foreground mb-3 text-center">{{ description }}</p>
     </div>
+
     <hr class="border-border" />
+
     <div class="mt-4 flex items-center gap-2">
       <span
         v-for="tag in tags"
