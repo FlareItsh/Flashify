@@ -1,76 +1,73 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import Flashcard from '@/components/ui/Flashcard.vue'
 import AppLayout from '@/layouts/AppLayout.vue'
 import Heading from '@/components/ui/Heading.vue'
 import Button from '@/components/ui/Button.vue'
+import { Shuffle, ArrowLeft } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
+import api from '@/services/api'
+import { API_ENDPOINTS } from '@/config/api'
 
 const props = defineProps<{ deckId: string }>()
+const collectionId = props.deckId
 
-const decks = ref([
-  {
-    id: 1,
-    title: "What is Vue 3?",
-    description: "A progressive JavaScript framework",
-    cards: [
-      { question: "What is Vue?", answer: "A JavaScript framework for building UIs", hint: "Frontend framework" },
-      { question: "What is the Composition API?", answer: "A way to organize logic using functions", hint: "New in Vue 3" },
-      { question: "What is a ref?", answer: "A reactive reference to a value", hint: "use ref() in Vue" },
-      { question: "What does computed() do?", answer: "Creates a cached reactive value", hint: "Derived state" },
-      { question: "When to use watchEffect?", answer: "To track reactive changes automatically", hint: "Side effects" },
-      { question: "What is provide/inject?", answer: "A way to pass data through component hierarchy", hint: "Alternative to props" },
-      { question: "What is a Teleport in Vue?", answer: "Moves a component to another DOM location", hint: "DOM manipulation" },
-      { question: "How do you define a component in Vue 3?", answer: "Using defineComponent() or SFC syntax", hint: "Single File Component" },
-    ]
-  },
-  {
-    id: 2,
-    title: "TypeScript Basics",
-    description: "Understanding types and interfaces",
-    cards: [
-      { question: "What is TypeScript?", answer: "A typed superset of JavaScript", hint: "Adds types to JS" },
-      { question: "What is an interface?", answer: "A way to define object shapes", hint: "Type contracts" },
-      { question: "What is a type alias?", answer: "A custom name for a type", hint: "type MyType = ..." },
-      { question: "What is the difference between any and unknown?", answer: "unknown is safer, any disables type checks", hint: "Type safety" },
-      { question: "What is a union type?", answer: "A variable that can hold multiple types", hint: "e.g., string | number" },
-      { question: "What is type inference?", answer: "TypeScript automatically determines the type", hint: "No explicit type needed" },
-    ]
-  },
-  {
-    id: 3,
-    title: "Advanced CSS Techniques",
-    description: "Explore modern CSS features",
-    cards: [
-      { question: "What is Flexbox?", answer: "A layout module for flexible boxes", hint: "display: flex" },
-      { question: "What is CSS Grid?", answer: "A layout system with rows and columns", hint: "display: grid" },
-      { question: "What are CSS variables?", answer: "Custom properties for reusability", hint: "--my-color: red;" },
-      { question: "What is the difference between relative and absolute positioning?", answer: "Absolute positions relative to nearest positioned ancestor", hint: "position property" },
-      { question: "What is a pseudo-class?", answer: "Selectors like :hover or :focus", hint: "States of elements" },
-      { question: "What is a pseudo-element?", answer: "Selectors like ::before or ::after", hint: "Virtual elements" },
-    ]
-  }
-])
-
-
-
-const selectedDeck = decks.value.find(d => d.id === Number(props.deckId))
+const router = useRouter()
+const collection = ref<any>(null)
+const flashcards = ref<Array<any>>([])
+const loading = ref(true)
 const currentIndex = ref(0)
 
 function next() {
-  if (!selectedDeck) return
-  currentIndex.value = (currentIndex.value + 1) % selectedDeck.cards.length
+  if (flashcards.value.length === 0) return
+  currentIndex.value = (currentIndex.value + 1) % flashcards.value.length
 }
 
 function prev() {
-  if (!selectedDeck) return
-  currentIndex.value = (currentIndex.value - 1 + selectedDeck.cards.length) % selectedDeck.cards.length
+  if (flashcards.value.length === 0) return
+  currentIndex.value = (currentIndex.value - 1 + flashcards.value.length) % flashcards.value.length
 }
 
 function goTo(index: number) {
   currentIndex.value = index
 }
 
-onMounted(() => {
+function shuffle() {
+  if (flashcards.value.length === 0) return
+  // Fisher-Yates shuffle algorithm
+  const shuffled = [...flashcards.value]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  flashcards.value = shuffled
+  currentIndex.value = 0 // Reset to first card after shuffle
+}
+
+function goBack() {
+  router.push({ name: 'study-list' })
+}
+
+onMounted(async () => {
+  const token = api.getAuthToken()
+  if (token) {
+    try {
+      // Fetch collection details
+      const collectionResponse = await api.get<any>(API_ENDPOINTS.collections.get(collectionId))
+      collection.value = collectionResponse.data?.data || collectionResponse.data
+
+      // Fetch flashcards for this collection
+      const flashcardsResponse = await api.get<any>(API_ENDPOINTS.flashcards.list(collectionId))
+      const flashcardsData =
+        flashcardsResponse.data?.data?.data || flashcardsResponse.data?.data || []
+      flashcards.value = flashcardsData
+    } catch (error) {
+      console.error('Failed to fetch collection or flashcards:', error)
+    } finally {
+      loading.value = false
+    }
+  }
+
   const handler = (e: KeyboardEvent) => {
     if (e.key === 'ArrowRight') next()
     if (e.key === 'ArrowLeft') prev()
@@ -82,57 +79,117 @@ onMounted(() => {
 
 <template>
   <AppLayout>
-    <div v-if="selectedDeck">
-      <Heading :title="selectedDeck.title" :subtitle="selectedDeck.description" />
+    <div class="mb-2">
+      <button
+        @click="goBack"
+        class="flex items-center gap-2 px-2"
+      >
+        <ArrowLeft class="h-4 w-4" />
+        Back to Study
+      </button>
+    </div>
 
-      <div v-if="selectedDeck.cards.length > 0" class="flex flex-col items-center">
+    <div
+      v-if="loading"
+      class="text-foreground-muted text-center text-lg"
+    >
+      Loading flashcards...
+    </div>
+
+    <div
+      v-else-if="collection"
+      class="flex h-full flex-col"
+    >
+      <Heading
+        :title="collection.name"
+        :subtitle="`${flashcards.length} flashcard${flashcards.length !== 1 ? 's' : ''}`"
+      />
+
+      <div
+        v-if="flashcards.length > 0"
+        class="flex flex-1 flex-col items-center justify-between"
+      >
+        <!-- Shuffle Button -->
+        <div class="mb-6 flex w-full justify-center px-4">
+          <Button
+            @click="shuffle"
+            variant="secondary"
+            size="default"
+          >
+            <Shuffle />
+          </Button>
+        </div>
+
         <div class="coverflow-container">
           <div
-          v-for="(card, index) in selectedDeck.cards"
-          :key="index"
-          class="coverflow-item"
-          :style="{
-            transform: `
+            v-for="(card, index) in flashcards"
+            :key="card.flashcard_id"
+            class="coverflow-item"
+            :style="{
+              transform: `
               translateX(${(index - currentIndex) * 95}px)
               translateY(${Math.abs(index - currentIndex) * 25}px)
               translateZ(${-Math.abs(index - currentIndex) * 110}px)
               scale(${index === currentIndex ? 1 : 1})
             `,
-            zIndex: selectedDeck.cards.length - Math.abs(index - currentIndex),
-            opacity: Math.abs(index - currentIndex) > 3 ? 0 : 1,
-            pointerEvents: index === currentIndex ? 'auto' : 'none'
-          }"
-          @click="goTo(index)"
-        >
-          <Flashcard
-            :question="card.question"
-            :answer="card.answer"
-            :hint="card.hint"
-          />
+              zIndex: flashcards.length - Math.abs(index - currentIndex),
+              opacity: Math.abs(index - currentIndex) > 3 ? 0 : 1,
+              pointerEvents: index === currentIndex ? 'auto' : 'none'
+            }"
+            @click="goTo(index)"
+          >
+            <Flashcard
+              :question="card.front"
+              :answer="card.back"
+              :hint="card.hint"
+              :explanation="card.explaination"
+            />
+          </div>
         </div>
 
-        </div>
+        <div class="grid grid-cols-3 items-center gap-2 px-4 pb-4">
+          <!-- Previous Button -->
+          <Button
+            @click="prev"
+            size="lg"
+            variant="outline"
+            class="w-full justify-self-start sm:w-auto"
+          >
+            Previous
+          </Button>
 
-        <div class="mt-12 flex items-center gap-12">
-          <Button @click="prev" size="lg" variant="outline">Previous</Button>
-
-          <div class="text-center min-w-96">
-            <p class="text-xl font-semibold text-gray-800">
-              {{ currentIndex + 1 }} / {{ selectedDeck.cards.length }}
+          <!-- Counter - centered on all screens -->
+          <div class="min-w-16 text-center">
+            <p class="text-lg font-semibold sm:text-xl">
+              {{ currentIndex + 1 }} / {{ flashcards.length }}
             </p>
           </div>
 
-          <Button @click="next" size="lg" variant="outline">Next</Button>
+          <!-- Next Button -->
+          <Button
+            @click="next"
+            size="lg"
+            variant="outline"
+            class="w-full justify-self-end sm:w-auto"
+          >
+            Next
+          </Button>
         </div>
       </div>
 
-      <div v-else class="mt-20 text-center text-gray-500 text-lg">
-        This deck has no cards yet.
+      <div
+        v-else
+        class="text-foreground-muted mt-20 text-center text-lg"
+      >
+        This collection has no flashcards yet.
       </div>
     </div>
 
-    <div v-else class="mt-20 text-center text-gray-500 text-lg">
-      Deck not found.
+    <div
+      v-else
+      class="text-foreground-muted mt-20 text-center text-lg"
+    >
+      Collection not found.
     </div>
   </AppLayout>
 </template>
@@ -141,7 +198,8 @@ onMounted(() => {
 .coverflow-container {
   position: relative;
   width: 100%;
-  height: 520px;
+  height: 100%;
+  max-height: 50vh;
   perspective: 1200px;
   display: flex;
   align-items: center;
@@ -149,11 +207,35 @@ onMounted(() => {
   overflow: hidden;
 }
 
+@media (min-width: 640px) {
+  .coverflow-container {
+    max-height: 55vh;
+  }
+}
+
+@media (min-width: 768px) {
+  .coverflow-container {
+    max-height: 60vh;
+  }
+}
+
 .coverflow-item {
   position: absolute;
-  width: 360px;
+  width: 280px;
   transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
   transform-style: preserve-3d;
+}
+
+@media (min-width: 640px) {
+  .coverflow-item {
+    width: 320px;
+  }
+}
+
+@media (min-width: 768px) {
+  .coverflow-item {
+    width: 360px;
+  }
 }
 </style>

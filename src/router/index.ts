@@ -32,19 +32,18 @@ const router = createRouter({
           path: '', // /dashboard
           name: 'dashboard',
           component: () => import('@/Dashboard.vue')
-
         },
         {
           path: '/collections',
           name: 'collections',
-          component: () => import('@/pages/Collections.vue'),
+          component: () => import('@/pages/Collections.vue')
         },
 
         {
           path: '/flashcard/:id',
           name: 'flashcard',
           component: () => import('@/pages/FlashCards.vue'),
-          props: true,
+          props: true
         },
 
         {
@@ -62,14 +61,14 @@ const router = createRouter({
         },
 
         {
-          path: '/settings',
-          name: 'settings',
-          component: () => import('@/pages/Settings.vue')
+          path: '/settings/profile',
+          name: 'settings-profile',
+          component: () => import('@/pages/Profile.vue')
         },
         {
-          path: '/profile',
-          name: 'profile',
-          component: () => import('@/pages/Profile.vue')
+          path: '/settings/reset-password',
+          name: 'settings-reset-password',
+          component: () => import('@/pages/ResetPassword.vue')
         }
       ]
     },

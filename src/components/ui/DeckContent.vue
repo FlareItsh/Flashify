@@ -17,6 +17,15 @@ const props = withDefaults(
     editable: true
   }
 )
+
+const emit = defineEmits<{
+  (e: 'edit'): void
+}>()
+
+const handleEditClick = (event: Event) => {
+  event.stopPropagation()
+  emit('edit')
+}
 </script>
 
 <template>
@@ -39,7 +48,11 @@ const props = withDefaults(
         {{ priority }}
       </span>
 
-      <div v-if="editable" class="bg-secondary rounded-full p-2 cursor-pointer">
+      <div
+        v-if="editable"
+        class="bg-secondary hover:bg-secondary/80 cursor-pointer rounded-full p-2 transition-colors"
+        @click.stop="handleEditClick"
+      >
         <SquarePen class="h-5 w-5 text-white" />
       </div>
     </div>

@@ -1,65 +1,95 @@
 <script setup lang="ts">
-import { ref, defineProps } from 'vue'
+import { ref } from 'vue'
+import { SquarePen } from 'lucide-vue-next'
 
 defineProps<{
   question: string
   answer: string
   hint?: string
+  explanation?: string
+  editable?: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'edit'): void
 }>()
 
 const flipped = ref(false)
 const showHint = ref(false)
 
 const flipCard = (event: MouseEvent) => {
-  // Only flip if the click was NOT on the hint button
+  // Only flip if the click was NOT on the hint button or edit icon
   const target = event.target as HTMLElement
-  if (target.tagName !== 'BUTTON') {
+  if (target.tagName !== 'BUTTON' && !target.closest('.edit-icon')) {
     flipped.value = !flipped.value
   }
 }
 
+const handleEdit = (event: Event) => {
+  event.stopPropagation()
+  emit('edit')
+}
 </script>
 
 <template>
-  <div class="w-full flex h-full cursor-pointer perspective" @click="flipCard">
+  <div
+    class="perspective flex h-full w-full cursor-pointer"
+    @click="flipCard"
+  >
     <div
-      class="relative w-full h-95 duration-500 transform-style-preserve-3d"
+      class="transform-style-preserve-3d relative h-95 w-full duration-500"
       :class="{ 'rotate-y-180': flipped }"
     >
       <!-- FRONT -->
       <div
-        class="absolute inset-0 bg-primary rounded-xl flex flex-col justify-between p-6 shadow-sm backface-hidden"
+        class="bg-secondary border-border absolute inset-0 flex flex-col justify-between rounded-xl border p-6 shadow-sm backface-hidden"
       >
-        <div class="flex-9 flex justify-center items-center">
-          <h3 class="text-foreground text-center font-semibold p-2">
+        <div
+          v-if="editable"
+          class="edit-icon bg-primary hover:bg-primary/80 absolute top-4 right-4 cursor-pointer rounded-full p-2 transition-colors"
+          @click="handleEdit"
+        >
+          <SquarePen class="h-4 w-4 text-white" />
+        </div>
+
+        <div class="flex flex-9 items-center justify-center">
+          <h3 class="text-foreground p-2 text-center font-semibold">
             {{ question }}
           </h3>
         </div>
 
-
-        <div class="flex flex-1 justify-start mt-4">
+        <div class="mt-4 flex flex-1 justify-start">
           <button
             v-if="hint && !showHint"
             @click.stop="showHint = true"
-            class="px-4 py-2 text-xs bg-tertiary text-border-accent cursor-pointer rounded-full shadow transition"
+            class="bg-tertiary text-border-accent cursor-pointer rounded-full px-4 py-2 text-xs shadow transition"
           >
             Hint
           </button>
           <h5
             v-else-if="showHint"
-            class="text-background text-center px-2"
+            class="px-2 text-center"
           >
-            <span class="text-foreground-subtle">Hint:</span> {{ hint }}
+            <span class="font-light">Hint:</span>
+            {{ hint }}
           </h5>
         </div>
       </div>
 
-
       <!-- BACK -->
       <div
-        class="absolute inset-0 bg-primary items-center text-left flex flex-col justify-center rounded-xl p-6 shadow-sm rotate-y-180 backface-hidden"
+        class="bg-secondary border-border absolute inset-0 flex rotate-y-180 flex-col items-center justify-center rounded-xl border p-6 text-left shadow-sm backface-hidden"
       >
-        <h5 class="text-background font-semibold mb-2">{{ answer }}</h5>
+        <div class="flex flex-col items-center justify-center gap-3">
+          <h5 class="font-semibold">{{ answer }}</h5>
+          <p
+            v-if="explanation"
+            class="mt-2 text-center text-sm italic"
+          >
+            <span class="font-bold">Explaination</span>
+            {{ explanation }}
+          </p>
+        </div>
       </div>
     </div>
   </div>

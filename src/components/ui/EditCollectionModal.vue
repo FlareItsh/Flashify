@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import BaseModal from '@/components/ui/BaseModal.vue'
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import api from '@/services/api'
 import { API_ENDPOINTS } from '@/config/api'
 
-const props = defineProps<{ show: boolean }>()
+const props = defineProps<{
+  show: boolean
+  collection: any
+}>()
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'created'): void
+  (e: 'updated'): void
 }>()
 
 const enterName = ref('')
@@ -15,35 +18,23 @@ const enterDescription = ref('')
 const enterPriority = ref('medium')
 const enterTags = ref('')
 const loading = ref(false)
-const showErrors = ref(false)
 
-const isValid = computed(() => enterName.value.trim().length > 0)
-
-interface CollectionResponse {
-  data: {
-    id: number
-    name: string
-    [key: string]: any
-  }
-}
-
-// Reset form when modal closes
+// Populate form when collection changes
 watch(
-  () => props.show,
+  () => props.collection,
   newVal => {
-    if (!newVal) {
-      enterName.value = ''
-      enterDescription.value = ''
-      enterPriority.value = 'medium'
-      enterTags.value = ''
-      showErrors.value = false
+    if (newVal) {
+      enterName.value = newVal.name || ''
+      enterDescription.value = newVal.description || ''
+      enterPriority.value = newVal.priority_level || 'medium'
+      enterTags.value = newVal.tags ? newVal.tags.join(', ') : ''
     }
-  }
+  },
+  { immediate: true }
 )
 
-const saveCollection = async () => {
-  showErrors.value = true
-  if (!isValid.value) return
+const updateCollection = async () => {
+  if (!enterName.value.trim()) return
 
   loading.value = true
   try {
@@ -52,19 +43,22 @@ const saveCollection = async () => {
       .map(tag => tag.trim())
       .filter(tag => tag.length > 0)
 
-    const response = (await api.post(API_ENDPOINTS.collections.create, {
-      name: enterName.value.trim(),
-      description: enterDescription.value.trim() || null,
-      priority_level: enterPriority.value,
-      tags: tags.length > 0 ? tags : null
-    })) as CollectionResponse
+    const response = (await api.put(
+      API_ENDPOINTS.collections.update(props.collection.collection_id),
+      {
+        name: enterName.value.trim(),
+        description: enterDescription.value.trim() || null,
+        priority_level: enterPriority.value,
+        tags: tags.length > 0 ? tags : null
+      }
+    )) as { data: any }
 
-    console.log('Collection created:', response.data)
-    emit('created')
+    console.log('Collection updated:', response.data)
+    emit('updated')
     emit('close')
   } catch (error) {
-    console.error('Failed to create collection:', error)
-    alert('Failed to create collection. Please try again.')
+    console.error('Failed to update collection:', error)
+    alert('Failed to update collection. Please try again.')
   } finally {
     loading.value = false
   }
@@ -74,31 +68,19 @@ const saveCollection = async () => {
 <template>
   <BaseModal
     :show="props.show"
-    title="Add Collection"
+    title="Edit Collection"
     @close="emit('close')"
-    @save="saveCollection"
+    @save="updateCollection"
   >
-    <p class="text-foreground-muted">
-      Enter Collection Name
-      <span class="text-red-500">*</span>
-    </p>
+    <p class="text-foreground-muted">Collection Name</p>
     <input
       v-model="enterName"
-      :class="[
-        'w-full resize-none rounded-sm border p-2',
-        showErrors && !enterName.trim() ? 'border-red-500' : 'border-border'
-      ]"
+      class="border-border w-full resize-none rounded-sm border p-2"
       placeholder="e.g., Vue 3 Basics"
       :disabled="loading"
     />
-    <p
-      v-if="showErrors && !enterName.trim()"
-      class="mt-1 text-sm text-red-500"
-    >
-      Collection name is required
-    </p>
 
-    <p class="text-foreground-muted mt-5">Enter Description</p>
+    <p class="text-foreground-muted mt-5">Description</p>
     <textarea
       v-model="enterDescription"
       class="border-border w-full resize-none rounded-sm border p-2"
@@ -107,7 +89,7 @@ const saveCollection = async () => {
       :disabled="loading"
     />
 
-    <p class="text-foreground-muted mt-5">Enter Priority</p>
+    <p class="text-foreground-muted mt-5">Priority</p>
     <div class="flex justify-between">
       <label class="flex cursor-pointer items-center gap-2">
         <input
@@ -143,7 +125,7 @@ const saveCollection = async () => {
       </label>
     </div>
 
-    <p class="text-foreground-muted mt-5">Enter Tags (Optional)</p>
+    <p class="text-foreground-muted mt-5">Tags (Optional)</p>
     <input
       v-model="enterTags"
       class="border-border w-full rounded-sm border p-2"

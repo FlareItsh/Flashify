@@ -18,7 +18,8 @@ export const API_ENDPOINTS = {
     login: '/api/login',
     signup: '/api/register',
     logout: '/api/logout',
-    me: '/api/me'
+    me: '/api/me',
+    changePassword: '/api/change-password'
   },
   // User endpoints
   users: {
