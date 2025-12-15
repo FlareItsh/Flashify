@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Button from '@/components/ui/Button.vue'
-import { defineProps, defineEmits } from 'vue'
 
 const props = defineProps<{
   show: boolean

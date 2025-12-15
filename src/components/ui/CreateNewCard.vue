@@ -37,7 +37,7 @@ const saveCard = async () => {
 
   loading.value = true
   try {
-    const response = await api.post(API_ENDPOINTS.flashcards.create(props.collectionId), {
+    const response = await api.post<any>(API_ENDPOINTS.flashcards.create(props.collectionId), {
       front: question.value.trim(),
       back: answer.value.trim(),
       hint: hint.value.trim() || null,
