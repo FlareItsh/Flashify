@@ -131,10 +131,17 @@ const saveProfile = async () => {
   errors.value.api = []
 
   try {
+    // Ensure avatar_id is a valid number between 1 and 20
+    let avatarId = Number(selectedAvatarId.value)
+    if (isNaN(avatarId) || avatarId < 1 || avatarId > 20) {
+      errors.value.api = ['Selected avatar is invalid.']
+      isSavingProfile.value = false
+      return
+    }
     const response = await api.put<any>(API_ENDPOINTS.users.update(user.value!.user_id), {
       username: username.value,
       email: email.value,
-      avatar_id: selectedAvatarId.value
+      avatar_id: avatarId
     })
 
     const updatedUser = response.data?.data || response.data || response
