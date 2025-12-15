@@ -93,10 +93,16 @@ const fetchUserData = async () => {
     const response = await api.get<any>(API_ENDPOINTS.auth.me)
     const userData = response.data?.data || response.data || response
 
-    user.value = userData
-    username.value = userData.username
-    email.value = userData.email
-    selectedAvatarId.value = userData.avatar_id || 1
+    // Ensure avatar_id has a default value
+    const normalizedUser = {
+      ...userData,
+      avatar_id: userData.avatar_id || 1
+    }
+
+    user.value = normalizedUser
+    username.value = normalizedUser.username
+    email.value = normalizedUser.email
+    selectedAvatarId.value = normalizedUser.avatar_id
   } catch (error: any) {
     console.error('Failed to fetch user data:', error)
     errors.value.api = ['Failed to load user data. Please refresh the page.']
