@@ -19,22 +19,25 @@ const save = () => emit('save')
 <template>
   <div
     v-if="props.show"
-    class="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
   >
-    <div class="bg-background rounded-lg shadow-lg p-10 w-11/12 max-w-md relative">
+    <div class="bg-background relative w-11/12 max-w-md rounded-lg p-10 shadow-lg">
       <button
         @click="closeModal"
-        class="absolute top-3 right-4 text-gray-500 hover:text-gray-700 cursor-pointer"
+        class="absolute top-3 right-4 cursor-pointer text-gray-500 hover:text-gray-700"
       >
         ✕
       </button>
 
-      <h2 class="text-lg font-bold mb-4">{{ props.title }}</h2>
+      <h2 class="mb-4 text-lg font-bold">{{ props.title }}</h2>
 
       <slot />
 
-      <div class="flex justify-center mt-6">
-        <Button variant="secondary" @click="save">
+      <div class="mt-6 flex justify-center">
+        <Button
+          variant="secondary"
+          @click="save"
+        >
           {{ props.saveText ?? 'Save' }}
         </Button>
       </div>
