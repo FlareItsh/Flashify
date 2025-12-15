@@ -60,7 +60,9 @@ onMounted(async () => {
       const user = response.data?.data || response.data || response
       const newUsername = user.username || 'Profile'
       const newEmail = user.email || ''
-      const newAvatar = `${avatarUrl}${user.avatar_id}.png`
+      const newAvatar = user.avatar_id
+        ? `${avatarUrl}${user.avatar_id}.png`
+        : '/avatars/avatar1.png'
 
       username.value = newUsername
       email.value = newEmail

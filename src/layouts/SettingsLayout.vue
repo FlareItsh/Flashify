@@ -26,7 +26,9 @@ onMounted(async () => {
     try {
       const response = await api.get<any>(API_ENDPOINTS.auth.me)
       const user = response.data?.data || response.data || response
-      const newAvatar = `${avatarUrl}${user.avatar_id}.png`
+      const newAvatar = user.avatar_id
+        ? `${avatarUrl}${user.avatar_id}.png`
+        : '/avatars/avatar1.png'
       avatar.value = newAvatar
       // Cache the avatar for instant loading next time
       localStorage.setItem('userAvatar', newAvatar)
