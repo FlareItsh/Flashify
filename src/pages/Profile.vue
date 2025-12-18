@@ -24,9 +24,14 @@ const username = ref('')
 const email = ref('')
 const selectedAvatarId = ref(1)
 
-// Available avatars (fetched from API)
-const availableAvatars = ref<Array<{ avatar_id: number; file_path: string }>>([])
-const totalAvatars = computed(() => availableAvatars.value.length)
+// Available avatars (avatar1.png to avatar20.png)
+const totalAvatars = 20
+const availableAvatars = computed(() => {
+  return Array.from({ length: totalAvatars }, (_, i) => ({
+    id: i + 1,
+    path: `/avatars/avatar${i + 1}.png`
+  }))
+})
 
 // Validation errors
 const errors = ref({
@@ -107,28 +112,6 @@ const fetchUserData = async () => {
   }
 }
 
-// Fetch available avatars
-const fetchAvatars = async () => {
-  try {
-    const response = await api.get<any>(API_ENDPOINTS.avatars.list)
-    availableAvatars.value = response.data?.data || response.data || []
-  } catch (error: any) {
-    console.error('Failed to fetch avatars:', error)
-    // Fallback to hardcoded avatars if API fails
-    availableAvatars.value = Array.from({ length: 20 }, (_, i) => ({
-      avatar_id: i + 1,
-      file_path: `/avatars/avatar${i + 1}.png`
-    }))
-  }
-}
-
-// Select avatar
-const selectAvatar = (avatarId: number) => {
-  selectedAvatarId.value = avatarId
-  successMessage.value = ''
-  errors.value.api = []
-}
-
 // Save profile changes
 const saveProfile = async () => {
   // Run validations
@@ -142,18 +125,18 @@ const saveProfile = async () => {
   errors.value.api = []
 
   try {
-    // Ensure avatar_id is valid
+    // Ensure avatar_id is a valid number between 1 and 20
     let avatarId = Number(selectedAvatarId.value)
-    // Temporarily removed validation
-    // if (isNaN(avatarId) || avatarId < 1 || avatarId > 20) {
-    //   errors.value.api = ['Selected avatar is invalid.']
-    //   isSavingProfile.value = false
-    //   return
-    // }
+    if (isNaN(avatarId) || avatarId < 1 || avatarId > 20) {
+      errors.value.api = ['Selected avatar is invalid.']
+      isSavingProfile.value = false
+      return
+    }
+
     const requestData = {
       username: username.value,
       email: email.value,
-      avatar_id: parseInt(avatarId.toString(), 10)
+      avatar_id: avatarId
     }
 
     const response = await api.put<any>(
@@ -210,8 +193,14 @@ const resetForm = () => {
   }
 }
 
+// Select avatar
+const selectAvatar = (avatarId: number) => {
+  selectedAvatarId.value = avatarId
+  successMessage.value = ''
+  errors.value.api = []
+}
+
 onMounted(() => {
-  fetchAvatars()
   fetchUserData()
 })
 </script>
@@ -272,25 +261,25 @@ onMounted(() => {
             >
               <button
                 v-for="avatar in availableAvatars"
-                :key="avatar.avatar_id"
+                :key="avatar.id"
                 type="button"
-                @click="selectAvatar(avatar.avatar_id)"
+                @click="selectAvatar(avatar.id)"
                 class="group focus:ring-primary relative aspect-square overflow-hidden rounded-lg border-2 transition-all hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                 :class="
-                  selectedAvatarId === avatar.avatar_id
+                  selectedAvatarId === avatar.id
                     ? 'border-primary ring-primary ring-2 ring-offset-2'
                     : 'border-border hover:border-primary/50'
                 "
               >
                 <img
-                  :src="avatar.file_path"
-                  :alt="`Avatar ${avatar.avatar_id}`"
+                  :src="avatar.path"
+                  :alt="`Avatar ${avatar.id}`"
                   class="h-full w-full object-cover"
                   loading="lazy"
                 />
                 <!-- Selected Indicator -->
                 <div
-                  v-if="selectedAvatarId === avatar.avatar_id"
+                  v-if="selectedAvatarId === avatar.id"
                   class="bg-primary/10 absolute inset-0 flex items-center justify-center"
                 >
                   <Check class="text-primary h-6 w-6 drop-shadow-lg sm:h-8 sm:w-8" />

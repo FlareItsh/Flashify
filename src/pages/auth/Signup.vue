@@ -76,7 +76,10 @@ const isFormValid = () => {
     email.value.trim() &&
     password.value.trim() &&
     confirmPassword.value.trim() &&
-    Object.values(errors.value).every(e => (Array.isArray(e) ? e.length === 0 : e === ''))
+    errors.value.username === '' &&
+    errors.value.email === '' &&
+    errors.value.password === '' &&
+    errors.value.confirmPassword === ''
   )
 }
 
@@ -120,7 +123,8 @@ const attemptSignup = async () => {
       // Flatten all error messages into an array
       errors.value.api = Object.values(validationErrors).flat() as string[]
     } else {
-      errors.value.api = [error.message || 'Signup failed. Please try again.']
+      // For all other errors (timeout, network, server errors), show user-friendly message
+      errors.value.api = ['Server Error, please try again']
     }
   } finally {
     isLoading.value = false

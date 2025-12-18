@@ -53,8 +53,7 @@ const isFormValid = () => {
     errors.value.login === '' &&
     errors.value.password === '' &&
     login.value.trim() !== '' &&
-    password.value.trim() !== '' &&
-    errors.value.api.length === 0
+    password.value.trim() !== ''
   )
 }
 
