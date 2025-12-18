@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SquarePen } from 'lucide-vue-next'
+import { SquarePen, Trash2 } from 'lucide-vue-next'
 
 const props = withDefaults(
   defineProps<{
@@ -20,11 +20,17 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'edit'): void
+  (e: 'delete'): void
 }>()
 
 const handleEditClick = (event: Event) => {
   event.stopPropagation()
   emit('edit')
+}
+
+const handleDeleteClick = (event: Event) => {
+  event.stopPropagation()
+  emit('delete')
 }
 </script>
 
@@ -50,10 +56,20 @@ const handleEditClick = (event: Event) => {
 
       <div
         v-if="editable"
-        class="bg-secondary hover:bg-secondary/80 cursor-pointer rounded-full p-2 transition-colors"
-        @click.stop="handleEditClick"
+        class="flex items-center gap-2"
       >
-        <SquarePen class="h-5 w-5 text-white" />
+        <div
+          class="bg-secondary hover:bg-secondary/80 cursor-pointer rounded-full p-2 transition-colors"
+          @click.stop="handleEditClick"
+        >
+          <SquarePen class="h-5 w-5 text-white" />
+        </div>
+        <div
+          class="cursor-pointer rounded-full bg-red-500 p-2 transition-colors hover:bg-red-600"
+          @click.stop="handleDeleteClick"
+        >
+          <Trash2 class="h-5 w-5 text-white" />
+        </div>
       </div>
     </div>
 

@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/AppLayout.vue'
 import Flashcard from '@/components/ui/Flashcard.vue'
 import CreateNewCard from '@/components/ui/CreateNewCard.vue'
 import EditFlashcardModal from '@/components/ui/EditFlashcardModal.vue'
+import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal.vue'
 import { useModal } from '@/composables/useModal'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -18,10 +19,12 @@ const collectionId = props.id
 const router = useRouter()
 const createNewCardModal = useModal()
 const editCardModal = useModal()
+const deleteCardModal = useModal()
 
 const collection = ref<any>(null)
 const flashcards = ref<Array<any>>([])
 const selectedFlashcard = ref<any>(null)
+const flashcardToDelete = ref<any>(null)
 const loading = ref(true)
 
 const fetchFlashcards = async () => {
@@ -56,6 +59,27 @@ const handleCardUpdated = () => {
 const openEditModal = (flashcard: any) => {
   selectedFlashcard.value = flashcard
   editCardModal.open()
+}
+
+const handleCardDeleted = (flashcard: any) => {
+  flashcardToDelete.value = flashcard
+  deleteCardModal.open()
+}
+
+const confirmDeleteFlashcard = async () => {
+  if (!flashcardToDelete.value) return
+
+  try {
+    await api.delete(
+      API_ENDPOINTS.flashcards.delete(collectionId, flashcardToDelete.value.flashcard_id)
+    )
+    fetchFlashcards() // Refresh the list
+    deleteCardModal.close()
+    flashcardToDelete.value = null
+  } catch (error) {
+    console.error('Failed to delete flashcard:', error)
+    alert('Failed to delete flashcard. Please try again.')
+  }
 }
 
 const goBack = () => {
@@ -121,6 +145,7 @@ onMounted(() => {
         :explanation="card.explaination"
         :editable="true"
         @edit="openEditModal(card)"
+        @delete="handleCardDeleted(card)"
       />
     </div>
     <CreateNewCard
@@ -135,6 +160,14 @@ onMounted(() => {
       :collection-id="collectionId"
       @close="editCardModal.close"
       @updated="handleCardUpdated"
+    />
+    <DeleteConfirmationModal
+      :show="deleteCardModal.show.value"
+      title="Delete Flashcard"
+      message="Are you sure you want to delete this flashcard? This action cannot be undone."
+      confirm-text="Delete Flashcard"
+      @close="deleteCardModal.close"
+      @confirm="confirmDeleteFlashcard"
     />
   </AppLayout>
 </template>

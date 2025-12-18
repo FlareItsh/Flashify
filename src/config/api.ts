@@ -31,6 +31,10 @@ export const API_ENDPOINTS = {
     getByEmail: '/api/users/email',
     getByUsername: (username: string) => `/api/users/username/${username}`
   },
+  // Avatar endpoints
+  avatars: {
+    list: '/api/avatars'
+  },
   // Flashcards endpoints (nested under collections)
   flashcards: {
     list: (collectionId: string | number) => `/api/collections/${collectionId}/flashcards`,

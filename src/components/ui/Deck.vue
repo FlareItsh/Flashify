@@ -13,6 +13,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit'): void
+  (e: 'delete'): void
 }>()
 
 const router = useRouter()
@@ -24,6 +25,10 @@ const goToFlashcard = () => {
 const handleEdit = () => {
   // No need to stopPropagation here since DeckContent already does it
   emit('edit')
+}
+
+const handleDelete = () => {
+  emit('delete')
 }
 </script>
 
@@ -39,6 +44,7 @@ const handleEdit = () => {
       :priority="priority"
       :editable="editable"
       @edit="handleEdit"
+      @delete="handleDelete"
     />
   </div>
 </template>

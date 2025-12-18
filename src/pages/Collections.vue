@@ -7,17 +7,24 @@ import Button from '@/components/ui/Button.vue'
 import { useModal } from '@/composables/useModal'
 import CreateNewCollectionModal from '@/components/ui/CreateNewCollectionModal.vue'
 import EditCollectionModal from '@/components/ui/EditCollectionModal.vue'
+import DeleteConfirmationModal from '@/components/ui/DeleteConfirmationModal.vue'
 import { useDecks } from '@/composables/useDecks'
 
 const createNewCollModal = useModal()
 const editCollModal = useModal()
+const deleteCollModal = useModal()
 const { decks } = useDecks()
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import api from '@/services/api'
 import { API_ENDPOINTS } from '@/config/api'
 
 const listOfCollections = ref<Array<any>>([])
 const selectedCollection = ref<any>(null)
+const collectionToDelete = ref<any>(null)
+
+const deleteCollectionMessage = computed(() => {
+  return `Are you sure you want to delete the collection "${collectionToDelete.value?.name || ''}"? This action cannot be undone.`
+})
 
 const fetchCollections = async () => {
   const token = api.getAuthToken()
@@ -43,6 +50,25 @@ const handleCollectionUpdated = () => {
 const openEditModal = (collection: any) => {
   selectedCollection.value = collection
   editCollModal.open()
+}
+
+const handleCollectionDeleted = (collection: any) => {
+  collectionToDelete.value = collection
+  deleteCollModal.open()
+}
+
+const confirmDeleteCollection = async () => {
+  if (!collectionToDelete.value) return
+
+  try {
+    await api.delete(API_ENDPOINTS.collections.delete(collectionToDelete.value.collection_id))
+    fetchCollections() // Refresh the list
+    deleteCollModal.close()
+    collectionToDelete.value = null
+  } catch (error) {
+    console.error('Failed to delete collection:', error)
+    alert('Failed to delete collection. Please try again.')
+  }
 }
 
 onMounted(() => {
@@ -77,6 +103,7 @@ onMounted(() => {
         :priority="collection.priority_level"
         :editable="true"
         @edit="openEditModal(collection)"
+        @delete="handleCollectionDeleted(collection)"
       />
       <div
         v-if="listOfCollections.length === 0"
@@ -95,6 +122,14 @@ onMounted(() => {
       :collection="selectedCollection"
       @close="editCollModal.close"
       @updated="handleCollectionUpdated"
+    />
+    <DeleteConfirmationModal
+      :show="deleteCollModal.show.value"
+      title="Delete Collection"
+      :message="deleteCollectionMessage"
+      confirm-text="Delete Collection"
+      @close="deleteCollModal.close"
+      @confirm="confirmDeleteCollection"
     />
   </AppLayout>
 </template>
