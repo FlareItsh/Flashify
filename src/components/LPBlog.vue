@@ -40,7 +40,7 @@ const handleStartLearning = () => {
 </script>
 
 <template>
-  <section id="blog" class="scroll-mt-24 text-center w-full mt-20 px-4">
+  <section id="blog" class="scroll-mt-20 text-center w-full mt-20 px-4">
     <h1 class="mb-2 text-4xl font-bold">Blog</h1>
     <p class="text-foreground-muted max-w-2xl mx-auto">
       Tips, Guides, and Study Insights

@@ -4,7 +4,7 @@ import LPHeadline from './ui/LPHeadline.vue';
 </script>
 
 <template>
-  <section id="home" class="w-full mt-5"> <!-- changed w-screen → w-full -->
+  <section id="home" class=" scroll-mt-40 w-full mt-5"> <!-- changed w-screen → w-full -->
     <!-- Mobile: stacked -->
     <div class="md:hidden">
       <div class="pb-10 min-h-[620px] flex flex-col justify-center">
