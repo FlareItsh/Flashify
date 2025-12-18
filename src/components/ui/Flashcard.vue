@@ -18,12 +18,14 @@ const flipped = ref(false)
 const showHint = ref(false)
 
 const flipCard = (event: MouseEvent) => {
-  // Only flip if the click was NOT on the hint button or edit icon
   const target = event.target as HTMLElement
-  if (target.tagName !== 'BUTTON' && !target.closest('.edit-icon')) {
-    flipped.value = !flipped.value
-  }
+
+  // Prevent flip when clicking buttons or edit icon
+  if (target.closest('button') || target.closest('.edit-icon')) return
+
+  flipped.value = !flipped.value
 }
+
 
 const handleEdit = (event: Event) => {
   event.stopPropagation()
@@ -32,61 +34,50 @@ const handleEdit = (event: Event) => {
 </script>
 
 <template>
-  <div
-    class="perspective flex h-full w-full cursor-pointer"
-    @click="flipCard"
-  >
-    <div
-      class="transform-style-preserve-3d relative h-95 w-full duration-500"
-      :class="{ 'rotate-y-180': flipped }"
-    >
-      <!-- FRONT -->
-      <div
-        class="bg-secondary border-border absolute inset-0 flex flex-col justify-between rounded-xl border p-6 shadow-sm backface-hidden"
-      >
-        <div
-          v-if="editable"
-          class="edit-icon bg-primary hover:bg-primary/80 absolute top-4 right-4 cursor-pointer rounded-full p-2 transition-colors"
-          @click="handleEdit"
-        >
+
+  <div class="perspective cursor-pointer mt-5" @click="flipCard">
+    <div class="relative h-[300px] sm:h-[350px] md:h-[400px] w-full
+             transform-style-preserve-3d transition-transform duration-500" :class="{ 'rotate-y-180': flipped }">
+      <div class="absolute inset-0 backface-hidden
+               bg-secondary border border-border shadow-sm
+               rounded-xl p-6 flex flex-col">
+
+        <div v-if="editable" class="edit-icon absolute right-4 top-4 rounded-full bg-primary p-2
+                 transition hover:bg-primary/80 z-10" @click.stop="handleEdit">
           <SquarePen class="h-4 w-4 text-white" />
         </div>
 
-        <div class="flex flex-9 items-center justify-center">
-          <h3 class="text-foreground p-2 text-center font-semibold">
+
+        <div class="flex flex-1 items-center justify-center text-center">
+          <h3 class="text-lg sm:text-xl md:text-2xl font-semibold leading-relaxed">
             {{ question }}
           </h3>
         </div>
 
-        <div class="mt-4 flex flex-1 justify-start">
-          <button
-            v-if="hint && !showHint"
-            @click.stop="showHint = true"
-            class="bg-tertiary text-border-accent cursor-pointer rounded-full px-4 py-2 text-xs shadow transition"
-          >
+
+        <div class="absolute bottom-4 left-4">
+          <button v-if="hint && !showHint" @click.stop="showHint = true"
+            class="rounded-full text-primary bg-tertiary px-4 py-2 text-sm font-medium shadow hover:bg-tertiary/80">
             Hint
           </button>
-          <h5
-            v-else-if="showHint"
-            class="px-2 text-center"
-          >
-            <span class="font-light">Hint:</span>
-            {{ hint }}
-          </h5>
+
+          <p v-else-if="showHint" class="text-sm">
+            <span class="font-medium">Hint:</span> {{ hint }}
+          </p>
         </div>
       </div>
 
-      <!-- BACK -->
-      <div
-        class="bg-secondary border-border absolute inset-0 flex rotate-y-180 flex-col items-center justify-center rounded-xl border p-6 text-left shadow-sm backface-hidden"
-      >
-        <div class="flex flex-col items-center justify-center gap-3">
-          <h5 class="font-semibold">{{ answer }}</h5>
-          <p
-            v-if="explanation"
-            class="mt-2 text-center text-sm italic"
-          >
-            <span class="font-bold">Explaination</span>
+
+      <div class="absolute inset-0 backface-hidden rotate-y-180
+               bg-background border-2 border-secondary shadow-sm
+               rounded-xl p-6 flex items-center justify-center text-center">
+        <div class="space-y-4">
+          <h5 class="text-lg sm:text-xl md:text-2xl font-semibold">
+            {{ answer }}
+          </h5>
+
+          <p v-if="explanation" class="text-sm italic text-muted-foreground max-w-prose mx-auto">
+            <span class="font-semibold not-italic">Explanation:</span>
             {{ explanation }}
           </p>
         </div>
@@ -95,16 +86,20 @@ const handleEdit = (event: Event) => {
   </div>
 </template>
 
+
 <style scoped>
 .perspective {
   perspective: 1000px;
 }
+
 .transform-style-preserve-3d {
   transform-style: preserve-3d;
 }
+
 .backface-hidden {
   backface-visibility: hidden;
 }
+
 .rotate-y-180 {
   transform: rotateY(180deg);
 }
