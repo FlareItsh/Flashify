@@ -150,7 +150,7 @@
 <style scoped>
 .coverflow-container {
   position: relative;
-  width: 100%;
+  width: 90%;
   height: 520px;
   perspective: 1090px;
   display: flex;
@@ -163,7 +163,7 @@
 
 .coverflow-item {
   position: absolute;
-  width: 340px;
+  width: 320px;
   height: 520px;
   transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
