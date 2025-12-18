@@ -296,14 +296,20 @@ const handleLogout = async () => {
       <div class="group relative">
         <button
           @click="toggleTheme"
-          class="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative w-full rounded-lg p-3 transition-colors"
-          :class="{ 'justify-center': isCollapsed, 'justify-start': !isCollapsed }"
+          class="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative flex w-full items-center rounded-lg p-3 transition-colors"
+          :class="{ 'justify-center p-2': isCollapsed, 'justify-start p-3': !isCollapsed }"
           :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
         >
-          <!-- Use grid to perfectly align icon in the center -->
-          <div class="grid grid-cols-[auto_1fr] items-center gap-3">
-            <!-- Icon column - always centered -->
-            <div class="flex justify-center">
+          <!-- Use flex when collapsed, grid when expanded to avoid empty 1fr column -->
+          <div
+            :class="
+              isCollapsed
+                ? 'flex w-full items-center justify-center'
+                : 'grid grid-cols-[auto_1fr] items-center gap-3'
+            "
+          >
+            <!-- Icon column - fixed square and centered -->
+            <div class="flex h-8 w-8 items-center justify-center">
               <Transition
                 name="icon"
                 mode="out-in"
@@ -348,15 +354,24 @@ const handleLogout = async () => {
       <div class="group profile-dropdown-container relative">
         <button
           @click="toggleProfileDropdown"
-          class="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative w-full rounded-lg p-3 transition-colors"
-          :class="{ 'bg-primary/10 text-primary font-semibold': showProfileDropdown }"
+          class="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground relative w-full rounded-lg transition-colors"
+          :class="[
+            { 'p-2': isCollapsed, 'p-3': !isCollapsed },
+            { 'bg-primary/10 text-primary font-semibold': showProfileDropdown }
+          ]"
         >
-          <div class="grid grid-cols-[auto_1fr] items-center gap-3">
+          <div
+            :class="
+              isCollapsed ? 'flex justify-center' : 'grid grid-cols-[auto_1fr] items-center gap-3'
+            "
+          >
             <div class="flex justify-center">
               <img
                 :src="avatar"
                 alt="User Avatar"
-                class="h-6 w-6 rounded-sm object-cover"
+                :class="isCollapsed ? 'h-5 w-5 shrink-0 rounded-sm' : 'h-5 w-5 shrink-0 rounded-sm'"
+                class="object-cover"
+                style="width: 32px; height: 32px"
               />
             </div>
             <span
@@ -372,8 +387,11 @@ const handleLogout = async () => {
         <Transition name="dropdown">
           <div
             v-if="showProfileDropdown"
-            class="bg-sidebar border-border absolute right-0 bottom-full left-0 mb-2 rounded-lg border shadow-lg"
-            :class="{ 'bottom-0 left-full ml-2': isCollapsed }"
+            :class="
+              isCollapsed
+                ? 'bg-sidebar border-border absolute top-1/2 left-full z-50 ml-2 w-fit -translate-y-[90%] transform rounded-lg border shadow-lg'
+                : 'bg-sidebar border-border absolute right-0 bottom-full left-0 mb-2 rounded-lg border shadow-lg'
+            "
           >
             <!-- User Info -->
             <div class="border-border border-b px-4 py-3">
@@ -410,7 +428,14 @@ const handleLogout = async () => {
           <div
             class="bg-primary rounded-md px-3 py-2 text-sm font-medium whitespace-nowrap text-white shadow-lg"
           >
-            {{ username }}
+            <div class="flex items-center gap-2">
+              <img
+                :src="avatar"
+                alt="User Avatar"
+                class="h-6 w-6 rounded-full object-cover"
+              />
+              <span>{{ username }}</span>
+            </div>
           </div>
         </div>
       </div>
