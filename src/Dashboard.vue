@@ -69,7 +69,7 @@ onMounted(async () => {
       />
       <DashboardCard
         title="Recenlty Studied"
-        :value="lastStudied || 'Never'"
+        :value="lastStudied || 'Nothing yet'"
         :icon="BookOpenCheck"
         description="Last collection you studied"
       />
