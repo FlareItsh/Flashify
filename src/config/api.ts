@@ -5,7 +5,7 @@
 
 export const API_CONFIG = {
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000',
-  timeout: 10000 // 10 seconds
+  timeout: 0 // No timeout
 } as const
 
 /**
