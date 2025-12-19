@@ -51,7 +51,7 @@ onMounted(async () => {
   <AppLayout>
     <Heading
       title="Dashboard"
-      description="Overview of your activity"
+      subtitle="Overview of your activity"
     />
 
     <DashboardCardLayout>
