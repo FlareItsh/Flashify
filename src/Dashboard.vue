@@ -41,7 +41,7 @@ onMounted(async () => {
         lastStudied.value = mostRecent.name
       }
     } catch (error) {
-      console.error('Failed to fetch Collections and Flashcards info:', error)
+      // console.error('Failed to fetch Collections and Flashcards info:', error)
     }
   }
 })

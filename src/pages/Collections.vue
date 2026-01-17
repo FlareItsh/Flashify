@@ -34,7 +34,7 @@ const fetchCollections = async () => {
       const collections = response.data?.data?.data || response.data?.data || []
       listOfCollections.value = collections
     } catch (error) {
-      console.error('Failed to fetch Collections and Flashcards info:', error)
+      // console.error('Failed to fetch Collections and Flashcards info:', error)
     }
   }
 }
@@ -66,7 +66,7 @@ const confirmDeleteCollection = async () => {
     deleteCollModal.close()
     collectionToDelete.value = null
   } catch (error) {
-    console.error('Failed to delete collection:', error)
+    // console.error('Failed to delete collection:', error)
     alert('Failed to delete collection. Please try again.')
   }
 }

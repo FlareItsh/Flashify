@@ -79,8 +79,8 @@ const attemptLogin = async () => {
     api.setAuthToken(token)
     await router.push('/dashboard')
   } catch (error: any) {
-    console.error('Login error:', error)
-    console.error('Full error object:', error.response?.data)
+    // Only log the error message if needed, or remove completely
+    // console.error('Login error:', error.message || 'Login failed')
 
     // Handle backend validation errors (e.g., Laravel-style { errors: { ... } })
     if (error.response?.data?.errors) {

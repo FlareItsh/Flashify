@@ -35,7 +35,7 @@ class ApiService {
       (response: any) => response,
       (error: AxiosError<{ message?: string; errors?: any }>) => {
         const errorMessage = error.response?.data?.message || error.message || 'An error occurred'
-        console.error('API request failed:', errorMessage)
+        // console.error('API request failed:', errorMessage)
 
         // Create error object with response data attached
         const enhancedError: any = new Error(errorMessage)

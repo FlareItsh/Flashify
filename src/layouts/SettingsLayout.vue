@@ -33,7 +33,7 @@ onMounted(async () => {
       // Cache the avatar for instant loading next time
       localStorage.setItem('userAvatar', newAvatar)
     } catch (error) {
-      console.error('Failed to fetch user info:', error)
+      // console.error('Failed to fetch user info:', error)
     }
   }
 

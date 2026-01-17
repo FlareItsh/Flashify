@@ -105,7 +105,7 @@ const fetchUserData = async () => {
     email.value = normalizedUser.email
     selectedAvatarId.value = normalizedUser.avatar_id
   } catch (error: any) {
-    console.error('Failed to fetch user data:', error)
+    // console.error('Failed to fetch user data:', error)
     errors.value.api = ['Failed to load user data. Please refresh the page.']
   } finally {
     isLoading.value = false
@@ -166,7 +166,7 @@ const saveProfile = async () => {
       })
     )
   } catch (error: any) {
-    console.error('Profile update error:', error)
+    // console.error('Profile update error:', error)
 
     // Handle validation errors from backend
     if (error.response?.data?.errors) {

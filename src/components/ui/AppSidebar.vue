@@ -73,7 +73,7 @@ onMounted(async () => {
       localStorage.setItem('userEmail', newEmail)
       localStorage.setItem('userAvatar', newAvatar)
     } catch (error) {
-      console.error('Failed to fetch user info:', error)
+      // keep failing silently or handle gracefully without logging the full error
       // If fetch fails, keep cached values
     }
   }
@@ -141,7 +141,7 @@ const handleLogout = async () => {
   try {
     await api.post(API_ENDPOINTS.auth.logout, {})
   } catch (error) {
-    console.error('Logout error:', error)
+    // Logout error can be ignored or handled silently
   } finally {
     api.clearAuthToken()
     window.location.href = '/'

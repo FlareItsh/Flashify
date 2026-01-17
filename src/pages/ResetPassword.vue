@@ -101,7 +101,7 @@ const handleSubmit = async () => {
     errors.value.newPassword = ''
     errors.value.confirmPassword = ''
   } catch (error: any) {
-    console.error('Password change error:', error)
+    // console.error('Password change error:', error)
 
     // Handle validation errors from backend
     if (error.response?.data?.errors) {

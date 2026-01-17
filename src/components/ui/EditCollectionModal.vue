@@ -53,11 +53,11 @@ const updateCollection = async () => {
       }
     )) as { data: any }
 
-    console.log('Collection updated:', response.data)
+    // console.log('Collection updated:', response.data)
     emit('updated')
     emit('close')
   } catch (error) {
-    console.error('Failed to update collection:', error)
+    // console.error('Failed to update collection:', error)
     alert('Failed to update collection. Please try again.')
   } finally {
     loading.value = false

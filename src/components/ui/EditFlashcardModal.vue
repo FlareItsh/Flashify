@@ -54,11 +54,11 @@ const updateFlashcard = async () => {
       }
     )) as any
 
-    console.log('Flashcard updated:', response.data)
+    // console.log('Flashcard updated:', response.data)
     emit('updated')
     emit('close')
   } catch (error) {
-    console.error('Failed to update flashcard:', error)
+    // console.error('Failed to update flashcard:', error)
     alert('Failed to update flashcard. Please try again.')
   } finally {
     loading.value = false

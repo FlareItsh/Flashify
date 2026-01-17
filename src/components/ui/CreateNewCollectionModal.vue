@@ -59,11 +59,11 @@ const saveCollection = async () => {
       tags: tags.length > 0 ? tags : null
     })) as CollectionResponse
 
-    console.log('Collection created:', response.data)
+    // console.log('Collection created:', response.data)
     emit('created')
     emit('close')
   } catch (error) {
-    console.error('Failed to create collection:', error)
+    // console.error('Failed to create collection:', error)
     alert('Failed to create collection. Please try again.')
   } finally {
     loading.value = false

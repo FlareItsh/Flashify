@@ -24,7 +24,7 @@ onMounted(async () => {
       const collections = response.data?.data?.data || response.data?.data || []
       listOfCollections.value = collections
     } catch (error) {
-      console.error('Failed to fetch Collections:', error)
+      // console.error('Failed to fetch Collections:', error)
     } finally {
       loading.value = false
     }

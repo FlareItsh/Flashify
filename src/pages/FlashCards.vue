@@ -41,7 +41,7 @@ const fetchFlashcards = async () => {
         flashcardsResponse.data?.data?.data || flashcardsResponse.data?.data || []
       flashcards.value = flashcardsData
     } catch (error) {
-      console.error('Failed to fetch collection or flashcards:', error)
+      // console.error('Failed to fetch collection or flashcards:', error)
     } finally {
       loading.value = false
     }
@@ -77,7 +77,7 @@ const confirmDeleteFlashcard = async () => {
     deleteCardModal.close()
     flashcardToDelete.value = null
   } catch (error) {
-    console.error('Failed to delete flashcard:', error)
+    // console.error('Failed to delete flashcard:', error)
     alert('Failed to delete flashcard. Please try again.')
   }
 }

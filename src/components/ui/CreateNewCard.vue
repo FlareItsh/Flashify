@@ -49,11 +49,11 @@ const saveCard = async () => {
       explaination: explanation.value.trim() || null
     })
 
-    console.log('Flashcard created:', response.data)
+    // emit('created') - result already used
     emit('created')
     emit('close')
   } catch (error) {
-    console.error('Failed to create flashcard:', error)
+    // console.error('Failed to create flashcard:', error)
     alert('Failed to create flashcard. Please try again.')
   } finally {
     loading.value = false

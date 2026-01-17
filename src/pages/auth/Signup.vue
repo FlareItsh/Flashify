@@ -114,8 +114,8 @@ const attemptSignup = async () => {
     api.setAuthToken(token)
     await router.push('/dashboard')
   } catch (error: any) {
-    console.error('Signup error:', error)
-    console.error('Full error object:', error.response?.data)
+    // Only log essential error information if necessary
+    // console.error('Signup error:', error.message || 'Signup failed')
 
     // Handle validation errors from backend
     if (error.response?.data?.errors) {
